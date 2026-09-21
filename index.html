@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Coach - Communication Scoring</title>
+    <style>
+        :root {
+            --ink: #17202a;
+            --muted: #657281;
+            --line: #d9e2ec;
+            --surface: #ffffff;
+            --soft: #f5f8fb;
+            --blue: #2563eb;
+            --teal: #0f766e;
+            --green: #15803d;
+            --amber: #b45309;
+            --red: #b91c1c;
+            --violet: #6d28d9;
+            --shadow: 0 18px 45px rgba(23, 32, 42, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--ink);
+            background:
+                linear-gradient(180deg, rgba(245, 248, 251, 0.96), rgba(230, 238, 245, 0.96)),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='700' viewBox='0 0 1200 700'%3E%3Crect width='1200' height='700' fill='%23f5f8fb'/%3E%3Cg fill='none' stroke='%23cfdbe7' stroke-width='2' opacity='0.55'%3E%3Cpath d='M0 120h1200M0 260h1200M0 400h1200M0 540h1200M160 0v700M360 0v700M620 0v700M920 0v700'/%3E%3C/g%3E%3Cg fill='%232563eb' opacity='0.08'%3E%3Ccircle cx='185' cy='170' r='70'/%3E%3Ccircle cx='1010' cy='510' r='90'/%3E%3C/g%3E%3Cg fill='%230f766e' opacity='0.10'%3E%3Crect x='675' y='92' width='170' height='100' rx='8'/%3E%3Crect x='235' y='470' width='220' height='86' rx='8'/%3E%3C/g%3E%3C/svg%3E");
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            letter-spacing: 0;
+        }
+
+        button, input, textarea {
+            font: inherit;
+        }
+
+        button {
+            border: 0;
+        }
+
+        .shell {
+            width: min(1240px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 24px 0 40px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            min-height: 56px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .brand-mark {
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            background: var(--ink);
+            color: white;
+            font-weight: 800;
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: 1.25rem;
+            line-height: 1.15;
+        }
+
+        .brand p {
+            margin: 2px 0 0;
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 36px;
+            padding: 0 12px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--amber);
+        }
+
+        .status-dot.ready {
+            background: var(--green);
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+            gap: 24px;
+            align-items: stretch;
+            margin-top: 24px;
+        }
+
+        .intro {
+            padding: 34px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.86);
+            box-shadow: var(--shadow);
+        }
+
+        .intro h2 {
+            max-width: 760px;
+            margin: 0;
+            font-size: clamp(2rem, 4vw, 4.2rem);
+            line-height: 1.02;
+            letter-spacing: 0;
+        }
+
+        .intro p {
+            max-width: 760px;
+            margin: 18px 0 0;
+            color: var(--muted);
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .impact-item {
+            min-height: 92px;
+            padding: 14px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--surface);
+        }
+
+        .impact-item strong {
+            display: block;
+            font-size: 1.35rem;
+        }
+
+        .impact-item span {
+            display: block;
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 0.88rem;
+            line-height: 1.35;
+        }
+
+        .rubric-summary {
+            padding: 22px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--ink);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .rubric-summary h3 {
+            margin: 0 0 14px;
+            font-size: 1.1rem;
+        }
+
+        .weight-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            align-items: center;
+            margin: 12px 0;
+        }
+
+        .weight-row span {
+            color: #d8e3ef;
+            font-size: 0.9rem;
+        }
+
+        .weight-track {
+            grid-column: 1 / -1;
+            height: 8px;
+            overflow: hidden;
+            border-radius: 99px;
+            background: rgba(255, 255, 255, 0.16);
+        }
+
+        .weight-fill {
+            height: 100%;
+            border-radius: inherit;
+            background: #61d6c4;
+        }
+
+        .video-panel {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(300px, 0.9fr);
+            gap: 20px;
+            align-items: center;
+            margin-top: 24px;
+            padding: 22px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.93);
+            box-shadow: var(--shadow);
+        }
+
+        .video-panel.hidden {
+            display: none;
+        }
+
+        .video-copy h3 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+
+        .video-copy p {
+            margin: 10px 0 0;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+
+        .video-frame {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            border: 1px solid #b8c7d5;
+            border-radius: 8px;
+            background: #0f172a;
+        }
+
+        .video-frame video {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #0f172a;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: minmax(340px, 0.95fr) minmax(0, 1.05fr);
+            gap: 24px;
+            margin-top: 24px;
+            align-items: start;
+        }
+
+        .panel {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.93);
+            box-shadow: var(--shadow);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 20px 22px 12px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .panel-header h3 {
+            margin: 0;
+            font-size: 1.08rem;
+        }
+
+        .panel-header p {
+            margin: 5px 0 0;
+            color: var(--muted);
+            font-size: 0.92rem;
+            line-height: 1.45;
+        }
+
+        .panel-body {
+            padding: 20px 22px 22px;
+        }
+
+        .info {
+            position: relative;
+            display: inline-grid;
+            place-items: center;
+            flex: 0 0 auto;
+            width: 28px;
+            height: 28px;
+            border: 1px solid var(--line);
+            border-radius: 50%;
+            background: var(--surface);
+            color: var(--blue);
+            font-weight: 800;
+            cursor: help;
+        }
+
+        .info::after {
+            position: absolute;
+            z-index: 30;
+            right: 0;
+            top: calc(100% + 10px);
+            width: min(320px, 78vw);
+            padding: 12px;
+            border: 1px solid #bfd0df;
+            border-radius: 8px;
+            background: #fff;
+            color: var(--ink);
+            box-shadow: 0 12px 28px rgba(23, 32, 42, 0.18);
+            content: attr(data-tip);
+            font-size: 0.82rem;
+            font-weight: 500;
+            line-height: 1.45;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-4px);
+            transition: opacity 0.16s ease, transform 0.16s ease;
+        }
+
+        .info:hover::after,
+        .info:focus-visible::after {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 270px;
+            resize: vertical;
+            padding: 14px;
+            border: 1px solid #b8c7d5;
+            border-radius: 8px;
+            background: white;
+            color: var(--ink);
+            line-height: 1.55;
+        }
+
+        .audio-upload {
+            margin-top: 14px;
+            border: 1px dashed #b8c7d5;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 14px;
+        }
+
+        .audio-upload input[type="file"] {
+            width: 100%;
+            padding: 8px;
+        }
+
+        .audio-upload .audio-hint {
+            margin-top: 7px;
+            color: var(--muted);
+            font-size: 0.86rem;
+            line-height: 1.4;
+        }
+
+
+        textarea:focus,
+        input:focus,
+        button:focus-visible {
+            outline: 3px solid rgba(37, 99, 235, 0.18);
+            outline-offset: 2px;
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(130px, 170px);
+            gap: 12px;
+            margin-top: 14px;
+            align-items: end;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            color: #334155;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            height: 44px;
+            padding: 0 12px;
+            border: 1px solid #b8c7d5;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .assist-text {
+            color: var(--muted);
+            font-size: 0.86rem;
+            line-height: 1.4;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .btn {
+            min-height: 46px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 800;
+        }
+
+        .btn-primary {
+            background: var(--blue);
+            color: white;
+        }
+
+        .btn-secondary {
+            border: 1px solid var(--line);
+            background: white;
+            color: var(--ink);
+        }
+
+        .btn:hover {
+            filter: brightness(0.98);
+            transform: translateY(-1px);
+        }
+
+        .rubric-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .rule {
+            padding: 14px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--soft);
+        }
+
+        .rule-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .rule h4 {
+            margin: 0;
+            font-size: 0.98rem;
+        }
+
+        .rule p {
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-size: 0.87rem;
+            line-height: 1.45;
+        }
+
+        .score-stage {
+            min-height: 190px;
+            display: grid;
+            place-items: center;
+            padding: 28px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .score-stage strong {
+            display: block;
+            color: var(--ink);
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+        }
+
+        .loading {
+            display: none;
+            padding: 28px;
+            text-align: center;
+            color: var(--blue);
+            font-weight: 800;
+        }
+
+        .loading.active,
+        .results.active {
+            display: block;
+        }
+
+        .results {
+            display: none;
+        }
+
+        .overall {
+            display: grid;
+            grid-template-columns: 170px minmax(0, 1fr);
+            gap: 20px;
+            align-items: center;
+            padding: 22px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .score-ring {
+            width: 154px;
+            height: 154px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: conic-gradient(var(--green) var(--score-deg), #e5edf4 0deg);
+        }
+
+        .score-ring div {
+            width: 118px;
+            height: 118px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: white;
+            text-align: center;
+        }
+
+        .score-ring strong {
+            font-size: 2.05rem;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .meta {
+            padding: 12px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--soft);
+        }
+
+        .meta span {
+            color: var(--muted);
+            font-size: 0.78rem;
+        }
+
+        .meta strong {
+            display: block;
+            margin-top: 4px;
+            font-size: 1.08rem;
+        }
+
+        .criteria {
+            padding: 16px 22px 22px;
+        }
+
+        .criterion {
+            padding: 16px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .criterion:last-child {
+            border-bottom: 0;
+        }
+
+        .criterion-top {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .criterion h4 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .progress {
+            height: 9px;
+            margin-top: 10px;
+            overflow: hidden;
+            border-radius: 99px;
+            background: #e6edf4;
+        }
+
+        .progress span {
+            display: block;
+            height: 100%;
+            border-radius: inherit;
+            background: var(--teal);
+        }
+
+        .metric-grid {
+            display: grid;
+            gap: 10px;
+            margin-top: 13px;
+        }
+
+        .metric {
+            padding: 12px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .metric-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .metric-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-weight: 800;
+        }
+
+        .metric small {
+            display: block;
+            margin-top: 8px;
+            color: var(--muted);
+            line-height: 1.4;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            min-height: 26px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: #dcfce7;
+            color: #14532d;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .tag.missing {
+            background: #fee2e2;
+            color: #7f1d1d;
+        }
+
+        .error {
+            margin: 22px;
+            padding: 14px;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            background: #fff1f2;
+            color: var(--red);
+        }
+
+        @media (max-width: 920px) {
+            .hero,
+            .main-grid,
+            .overall,
+            .video-panel {
+                grid-template-columns: 1fr;
+            }
+
+            .impact-grid,
+            .meta-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .score-ring {
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .shell {
+                width: min(100% - 20px, 1240px);
+                padding-top: 12px;
+            }
+
+            .topbar,
+            .field-row,
+            .actions {
+                grid-template-columns: 1fr;
+                display: grid;
+            }
+
+            .intro,
+            .panel-body,
+            .panel-header {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <header class="topbar">
+            <div class="brand">
+                <div class="brand-mark">IC</div>
+                <div>
+                    <h1>Interview Coach</h1>
+                    <p>Rubric-led communication feedback for self-introductions</p>
+                </div>
+            </div>
+            <div class="status-pill" id="apiStatus"><span class="status-dot"></span><span>Checking API</span></div>
+        </header>
+
+        <section class="hero">
+            <div class="intro">
+                <h2>Practice, score, and improve interview confidence.</h2>
+                <p>
+                    This hackathon project helps students and early-career learners understand how their introduction performs across content, pace, language, clarity, and engagement. It gives transparent feedback instead of a black-box score.
+                </p>
+                <div class="impact-grid">
+                    <div class="impact-item"><strong>5</strong><span>communication dimensions aligned to the rubric</span></div>
+                    <div class="impact-item"><strong>100</strong><span>point score with criterion-level breakdowns</span></div>
+                    <div class="impact-item"><strong>Actionable</strong><span>missing elements, filler words, pace, and structure feedback</span></div>
+                </div>
+            </div>
+            <aside class="rubric-summary">
+                <h3>Score weights</h3>
+                <div id="weightSummary"></div>
+            </aside>
+        </section>
+
+        <section class="video-panel hidden" id="generatedVideoPanel" aria-labelledby="generatedVideoTitle">
+            <div class="video-copy">
+                <h3 id="generatedVideoTitle">Generated interview video</h3>
+                <p>
+                    This video appears after the score script runs. It is refreshed from the project-generated video artifact and displayed alongside the transcript-based rubric report.
+                </p>
+            </div>
+            <div class="video-frame">
+                <video id="generatedVideo" controls preload="metadata">
+                    <source id="generatedVideoSource" src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </section>
+
+        <section class="main-grid">
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h3>Transcript input</h3>
+                        <p>Paste what the candidate said. After scoring, the UI displays the generated video artifact and the rubric report together.</p>
+                    </div>
+                    <button class="info" type="button" aria-label="Transcript scoring information" data-tip="The scorer uses transcript text and optional duration. Duration enables words-per-minute scoring; without it, the Speech Rate metric receives 0 because pace cannot be measured.">i</button>
+                </div>
+                <div class="panel-body">
+                    <label for="transcript">Self-introduction transcript</label>
+                    <textarea id="transcript" placeholder="Example: Hello everyone, my name is Ananya. I am 13 years old and studying in class 8. I live with my parents and sister. I enjoy reading and playing badminton. My goal is to become a doctor. Thank you for listening."></textarea>
+
+                    <div class="field-row">
+                        <div>
+                            <label for="duration">Duration in seconds</label>
+                            <div class="assist-text">Optional, but needed for WPM. Ideal pace is 111-140 words per minute.</div>
+                        </div>
+                        <input type="number" id="duration" min="1" placeholder="52">
+                    </div>
+
+                    <div class="actions">
+                        <button class="btn btn-primary" type="button" onclick="scoreTranscript()">Score and generate video</button>
+                        <button class="btn btn-secondary" type="button" onclick="scoreAudio()">Upload audio & score</button>
+                        <button class="btn btn-secondary" type="button" onclick="loadSample()">Load sample</button>
+                        <button class="btn btn-secondary" type="button" onclick="clearAll()">Clear</button>
+                    </div>
+
+                    <div class="audio-upload">
+                        <label for="audioFile" style="margin-bottom: 7px;">Upload self-introduction audio</label>
+                        <input type="file" accept="audio/*" id="audioFile" />
+                        <div class="audio-hint">
+                            The backend will convert your speech to text (Whisper) and then run the same scoring + video generation.
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h3>Results</h3>
+                        <p>Every score links back to the visible rubric constraints below.</p>
+                    </div>
+                    <button class="info" type="button" aria-label="Overall score formula" data-tip="Overall score is the sum of each criterion's normalized weighted score. Each criterion converts its metric points into the assigned rubric weight.">i</button>
+                </div>
+                <div class="loading" id="loading">Analyzing transcript...</div>
+                <div class="results" id="results">
+                    <div class="score-stage">
+                        <div>
+                            <strong>Your report will appear here.</strong>
+                            Add a transcript, include duration when available, and run the scorer.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel" style="margin-top: 24px;">
+            <div class="panel-header">
+                <div>
+                    <h3>Scoring constraints</h3>
+                    <p>These are the rules and thresholds currently used by the project.</p>
+                </div>
+                <button class="info" type="button" aria-label="Rubric transparency information" data-tip="Transparent constraints help learners see what to practice next: completeness, pacing, grammar habits, vocabulary range, filler control, and positive confidence.">i</button>
+            </div>
+            <div class="panel-body">
+                <div class="rubric-list" id="rubricList"></div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function resolveApiBaseUrl() {
+            if (window.location.protocol === "file:") {
+                return "http://localhost:5000";
+            }
+
+            if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.hostname === "::1") {
+                return window.location.origin;
+            }
+
+            return "http://localhost:5000";
+        }
+
+        const API_URL = resolveApiBaseUrl();
+        let rubricData = null;
+
+        async function fetchJson(path, options = {}) {
+            const candidates = [];
+            const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+
+            if (window.location.protocol === "file:") {
+                candidates.push(`http://localhost:5000${normalizedPath}`);
+            } else {
+                candidates.push(`${API_URL}${normalizedPath}`);
+                if (API_URL !== "http://localhost:5000") {
+                    candidates.push(`http://localhost:5000${normalizedPath}`);
+                }
+            }
+
+            let lastError = null;
+
+            for (const url of candidates) {
+                try {
+                    const response = await fetch(url, options);
+                    const text = await response.text();
+
+                    if (!text) {
+                        if (!response.ok) {
+                            throw new Error(`Request failed with status ${response.status}`);
+                        }
+                        return {};
+                    }
+
+                    let data;
+                    try {
+                        data = JSON.parse(text);
+                    } catch (parseError) {
+                        throw new Error("The server returned HTML instead of JSON. Make sure the Flask backend is running on port 5000.");
+                    }
+
+                    if (!response.ok) {
+                        throw new Error(data.error || data.message || `Request failed with status ${response.status}`);
+                    }
+
+                    return data;
+                } catch (error) {
+                    lastError = error;
+                }
+            }
+
+            throw lastError || new Error("Unable to reach the API.");
+        }
+
+        const metricTips = {
+            "Salutation Level": "Checks for a strong opening near the start. Normal greetings score lower than warm or enthusiastic greetings.",
+            "Keyword Presence": "Looks for required introduction elements: name, age, school or class, family, hobbies, plus optional depth such as ambition and achievements.",
+            "Flow": "Checks whether the answer follows a logical order: greeting, name, details, optional details, and closing.",
+            "Words Per Minute": "Uses word count divided by duration. Ideal range is 111-140 WPM; too slow or too fast reduces the score.",
+            "Grammar Score": "Uses simple grammar heuristics. Formula: 1 - min(errors per 100 words / 10, 1).",
+            "Vocabulary Richness": "Uses type-token ratio: distinct words divided by total words.",
+            "Filler Word Rate": "Counts fillers such as um, uh, like, you know, actually, basically, and similar words.",
+            "Sentiment/Positivity": "Estimates positive tone from confident, enthusiastic, and positive words."
+        };
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+        async function init() {
+            await Promise.all([checkHealth(), loadRubrics()]);
+            document.getElementById("results").classList.add("active");
+        }
+
+        async function checkHealth() {
+            const status = document.getElementById("apiStatus");
+            try {
+                await fetchJson("/api/health");
+                status.innerHTML = '<span class="status-dot ready"></span><span>API ready</span>';
+            } catch (error) {
+                status.innerHTML = '<span class="status-dot"></span><span>Start backend on port 5000</span>';
+            }
+        }
+
+        async function loadRubrics() {
+            try {
+                rubricData = await fetchJson("/api/rubrics");
+                renderWeights(rubricData);
+                renderRubrics(rubricData);
+            } catch (error) {
+                document.getElementById("weightSummary").innerHTML = "<p>Rubrics load when the backend is running.</p>";
+                document.getElementById("rubricList").innerHTML = "<div class='rule'>Start the Flask API to view live rubric constraints.</div>";
+            }
+        }
+
+        function renderWeights(data) {
+            const html = data.criteria.map(criterion => `
+                <div class="weight-row">
+                    <span>${escapeHtml(criterion.name)}</span>
+                    <strong>${criterion.weight}%</strong>
+                    <div class="weight-track"><div class="weight-fill" style="width:${criterion.weight}%"></div></div>
+                </div>
+            `).join("");
+            document.getElementById("weightSummary").innerHTML = html;
+        }
+
+        function describeMetric(metric) {
+            if (metric.name === "Keyword Presence") {
+                const required = metric.must_have.map(item => item.keyword).join(", ");
+                const optional = metric.good_to_have.map(item => item.keyword).join(", ");
+                return `Must-have: ${required}. Good-to-have: ${optional}.`;
+            }
+            if (metric.scoring) {
+                return metric.scoring.map(item => {
+                    const range = item.range ? `${item.range[0]}-${item.range[1]}` : item.level;
+                    const label = item.level ? `${item.level}: ` : "";
+                    return `${label}${range} gives ${item.score}/${metric.max_score}`;
+                }).join("; ");
+            }
+            return metric.description || metricTips[metric.name] || "Rubric metric.";
+        }
+
+        function renderRubrics(data) {
+            const html = data.criteria.map(criterion => {
+                const metrics = criterion.metrics.map(metric => `
+                    <p><strong>${escapeHtml(metric.name)} (${metric.max_score} pts):</strong> ${escapeHtml(describeMetric(metric))}</p>
+                `).join("");
+                return `
+                    <article class="rule">
+                        <div class="rule-head">
+                            <h4>${escapeHtml(criterion.name)} - ${criterion.weight}%</h4>
+                            <button class="info" type="button" aria-label="${escapeHtml(criterion.name)} info" data-tip="${escapeHtml(criterion.metrics.map(m => `${m.name}: ${m.max_score} pts`).join(" | "))}">i</button>
+                        </div>
+                        ${metrics}
+                    </article>
+                `;
+            }).join("");
+            document.getElementById("rubricList").innerHTML = html;
+        }
+
+        async function scoreTranscript() {
+            const transcript = document.getElementById("transcript").value.trim();
+            const duration = document.getElementById("duration").value;
+
+            if (!transcript) {
+                showError("Please enter a transcript to score.");
+                return;
+            }
+
+            document.getElementById("loading").classList.add("active");
+            document.getElementById("loading").textContent = "Scoring transcript and preparing generated video...";
+            document.getElementById("results").classList.remove("active");
+            document.getElementById("generatedVideoPanel").classList.add("hidden");
+
+            try {
+                const payload = { transcript };
+                if (duration) payload.duration_seconds = parseInt(duration, 10);
+
+                const data = await fetchJson("/api/score", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                displayResults(data);
+                showGeneratedVideo(data.generated_video);
+            } catch (error) {
+                showError(error.message || "Failed to connect to API. Make sure the backend is running.");
+            } finally {
+                document.getElementById("loading").classList.remove("active");
+            }
+        }
+
+        async function scoreAudio() {
+            const duration = document.getElementById("duration").value;
+            const fileInput = document.getElementById("audioFile");
+            const file = fileInput && fileInput.files && fileInput.files[0] ? fileInput.files[0] : null;
+
+            if (!file) {
+                showError("Please select an audio file to score.");
+                return;
+            }
+
+            document.getElementById("loading").classList.add("active");
+            document.getElementById("loading").textContent = "Transcribing audio (Whisper) and preparing generated video...";
+            document.getElementById("results").classList.remove("active");
+            document.getElementById("generatedVideoPanel").classList.add("hidden");
+
+            try {
+                const formData = new FormData();
+                formData.append("audio", file);
+                if (duration) formData.append("duration_seconds", parseInt(duration, 10));
+
+                const data = await fetchJson("/api/score-audio", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (data.transcript_extracted) {
+                    document.getElementById("transcript").value = data.transcript_extracted;
+                }
+
+                displayResults(data);
+                showGeneratedVideo(data.generated_video);
+            } catch (error) {
+                showError(error.message || "Failed to connect to API. Make sure the backend is running.");
+            } finally {
+                document.getElementById("loading").classList.remove("active");
+            }
+        }
+
+
+        function displayResults(data) {
+            const score = Number(data.overall_score || 0);
+            const ringDegrees = Math.max(0, Math.min(100, score)) * 3.6;
+            const wpm = data.metadata && data.metadata.wpm ? data.metadata.wpm.toFixed(2) : "Not provided";
+            const duration = data.metadata && data.metadata.duration_seconds ? `${data.metadata.duration_seconds}s` : "Not provided";
+
+            const criteriaHtml = data.criteria_scores.map(criterion => {
+                const percent = criterion.weight ? (criterion.weighted_score / criterion.weight) * 100 : 0;
+                const metrics = criterion.metrics.map(metric => renderMetric(metric)).join("");
+                return `
+                    <article class="criterion">
+                        <div class="criterion-top">
+                            <div>
+                                <h4>${escapeHtml(criterion.criterion)}</h4>
+                                <div class="progress"><span style="width:${Math.max(0, Math.min(100, percent))}%"></span></div>
+                            </div>
+                            <strong>${criterion.weighted_score}/${criterion.weight}</strong>
+                        </div>
+                        <div class="metric-grid">${metrics}</div>
+                    </article>
+                `;
+            }).join("");
+
+            document.getElementById("results").innerHTML = `
+                <section class="overall">
+                    <div class="score-ring" style="--score-deg:${ringDegrees}deg"><div><strong>${score}</strong><span>/100</span></div></div>
+                    <div>
+                        <h3>Overall interview readiness score</h3>
+                        <p class="assist-text">Use the lowest metric scores as your practice plan for the next attempt.</p>
+                        <div class="meta-grid">
+                            <div class="meta"><span>Words</span><strong>${data.word_count}</strong></div>
+                            <div class="meta"><span>WPM</span><strong>${wpm}</strong></div>
+                            <div class="meta"><span>Duration</span><strong>${duration}</strong></div>
+                        </div>
+                    </div>
+                </section>
+                <section class="criteria">${criteriaHtml}</section>
+            `;
+            document.getElementById("results").classList.add("active");
+            document.getElementById("results").scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        function showGeneratedVideo(videoData) {
+            if (!videoData || !videoData.video_url) return;
+            const panel = document.getElementById("generatedVideoPanel");
+            const video = document.getElementById("generatedVideo");
+            const source = document.getElementById("generatedVideoSource");
+
+            source.src = videoData.video_url;
+            video.load();
+            panel.classList.remove("hidden");
+        }
+
+        function renderMetric(metric) {
+            const tip = metricTips[metric.metric] || "Metric score from the active rubric.";
+            let tags = "";
+
+            if (metric.keywords_found) {
+                if (Array.isArray(metric.keywords_found)) {
+                    tags = metric.keywords_found.map(item => `<span class="tag">${escapeHtml(item)}</span>`).join("");
+                } else {
+                    tags = Object.entries(metric.keywords_found).map(([key, value]) => `
+                        <span class="tag ${value.found ? "" : "missing"}">${value.found ? "Found" : "Missing"}: ${escapeHtml(key)}</span>
+                    `).join("");
+                }
+            }
+
+            if (metric.found_fillers && metric.found_fillers.length) {
+                tags += metric.found_fillers.map(item => `<span class="tag missing">${escapeHtml(item)}</span>`).join("");
+            }
+
+            return `
+                <div class="metric">
+                    <div class="metric-head">
+                        <span class="metric-title">${escapeHtml(metric.metric)} <button class="info" type="button" aria-label="${escapeHtml(metric.metric)} info" data-tip="${escapeHtml(tip)}">i</button></span>
+                        <strong>${metric.score}/${metric.max_score}</strong>
+                    </div>
+                    <small>${escapeHtml(metric.feedback)}</small>
+                    ${tags ? `<div class="tags">${tags}</div>` : ""}
+                </div>
+            `;
+        }
+
+        function showError(message) {
+            document.getElementById("results").innerHTML = `<div class="error"><strong>Error:</strong> ${escapeHtml(message)}</div>`;
+            document.getElementById("results").classList.add("active");
+        }
+
+        async function loadSample() {
+            try {
+                const data = await fetchJson("/api/sample");
+                document.getElementById("transcript").value = data.transcript;
+                document.getElementById("duration").value = "52";
+            } catch (error) {
+                showError(error.message || "Failed to connect to API.");
+            }
+        }
+
+        function clearAll() {
+            document.getElementById("transcript").value = "";
+            document.getElementById("duration").value = "";
+            document.getElementById("loading").classList.remove("active");
+            document.getElementById("generatedVideoPanel").classList.add("hidden");
+            document.getElementById("generatedVideoSource").src = "";
+            document.getElementById("generatedVideo").load();
+            document.getElementById("results").innerHTML = '<div class="score-stage"><div><strong>Your report will appear here.</strong>Add a transcript, include duration when available, and run the scorer.</div></div>';
+            document.getElementById("results").classList.add("active");
+        }
+
+        document.getElementById("transcript").addEventListener("keydown", event => {
+            if (event.ctrlKey && event.key === "Enter") {
+                scoreTranscript();
+            }
+        });
+
+        document.getElementById("audioFile").addEventListener("change", event => {
+            const file = event.target.files[0];
+            if (file) {
+                const audio = new Audio();
+                audio.src = URL.createObjectURL(file);
+                audio.addEventListener("loadedmetadata", () => {
+                    if (audio.duration && !isNaN(audio.duration)) {
+                        document.getElementById("duration").value = Math.round(audio.duration);
+                    }
+                });
+            }
+        });
+
+        init();
+    </script>
+</body>
+</html>

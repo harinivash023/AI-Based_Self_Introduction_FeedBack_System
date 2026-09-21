@@ -1,0 +1,39 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+myenv/
+venv/
+.venv/
+
+# Generated outputs
+generated_outputs/
+
+# Generated media
+*.mp4
+*.wav
+*.mp3
+*.avi
+*.mov
+
+# Generated reports/results
+analysis_report.txt
+test_results.json
+
+# Local binaries
+bin/
+
+# External/reference documents
+External/
+
+# Environment variables
+.env
+.env.*
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
