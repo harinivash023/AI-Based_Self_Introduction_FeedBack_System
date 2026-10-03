@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interview Coach - Communication Scoring</title>
+    <title>Self Introduction FeedBack System</title>
     <style>
         :root {
             --ink: #17202a;
@@ -55,6 +55,10 @@
             justify-content: space-between;
             gap: 16px;
             min-height: 56px;
+        }
+
+        .brand h1 {
+            font-size: clamp(1.3rem, 2vw, 2rem);
         }
 
         .brand {
@@ -193,6 +197,22 @@
             margin: 12px 0;
         }
 
+        .weight-label {
+            display: grid;
+            gap: 4px;
+        }
+
+        .weight-label span {
+            color: #d8e3ef;
+            font-size: 0.9rem;
+        }
+
+        .weight-label small {
+            color: rgba(216, 227, 239, 0.75);
+            font-size: 0.72rem;
+            line-height: 1.4;
+        }
+
         .weight-row span {
             color: #d8e3ef;
             font-size: 0.9rem;
@@ -259,7 +279,7 @@
 
         .main-grid {
             display: grid;
-            grid-template-columns: minmax(340px, 0.95fr) minmax(0, 1.05fr);
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 24px;
             margin-top: 24px;
             align-items: start;
@@ -270,6 +290,260 @@
             border-radius: 8px;
             background: rgba(255, 255, 255, 0.93);
             box-shadow: var(--shadow);
+        }
+
+        .input-card {
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: var(--shadow);
+        }
+
+        .input-card-header {
+            padding: 22px 22px 12px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .input-card-header h3 {
+            margin: 0;
+            font-size: 1.15rem;
+        }
+
+        .input-card-header p {
+            margin: 8px 0 0;
+            color: var(--muted);
+            line-height: 1.55;
+            font-size: 0.92rem;
+        }
+
+        .input-card-body {
+            padding: 20px 22px 22px;
+        }
+
+        .input-card-body textarea {
+            min-height: 210px;
+        }
+
+        .primary-action {
+            width: 100%;
+            margin-top: 18px;
+            min-height: 50px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--blue), #1d4ed8);
+            color: #fff;
+            box-shadow: 0 12px 20px rgba(37, 99, 235, 0.2);
+        }
+
+        .input-actions {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .input-actions .btn {
+            min-height: 50px;
+        }
+
+        .input-actions .primary-action {
+            margin-top: 0;
+        }
+
+        .audio-file-meta {
+            margin-top: 12px;
+            min-height: 20px;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        .result-shell {
+            display: grid;
+            gap: 20px;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: minmax(180px, 200px) minmax(0, 1fr);
+            gap: 18px;
+            align-items: center;
+        }
+
+        .result-summary-card,
+        .detail-card,
+        .transcript-card,
+        .video-card {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: linear-gradient(180deg, #ffffff, #f8fbff);
+            padding: 18px 18px 16px;
+        }
+
+        .result-summary-card h4,
+        .detail-card h4,
+        .transcript-card h4,
+        .video-card h4 {
+            margin: 0 0 12px;
+            font-size: 1rem;
+        }
+
+        .overall-score {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: conic-gradient(var(--teal) var(--score-deg), #dfeaf2 0deg);
+            margin: 0 auto;
+        }
+
+        .overall-score span {
+            display: grid;
+            place-items: center;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: white;
+            color: var(--ink);
+            font-weight: 800;
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .criteria-stack {
+            display: grid;
+            gap: 12px;
+        }
+
+        .criterion-row {
+            padding: 12px 14px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: white;
+        }
+
+        .criterion-row-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .criterion-row .progress {
+            margin-top: 0;
+        }
+
+        .coaching-overall {
+            margin-top: 12px;
+            padding: 14px 16px;
+            border-left: 4px solid var(--teal);
+            border-radius: 8px;
+            background: var(--soft);
+            line-height: 1.6;
+        }
+
+        .coaching-overall strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .coaching-report-summary {
+            display: grid;
+            grid-template-columns: minmax(150px, 180px) minmax(0, 1fr);
+            gap: 18px;
+            align-items: center;
+        }
+
+        .coaching-score h5 {
+            margin: 0 0 10px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .coaching-category {
+            padding: 16px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .coaching-category:last-child {
+            border-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .coaching-category-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .coaching-category-head h5 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .coaching-insights {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 14px;
+        }
+
+        .coaching-insight strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.86rem;
+        }
+
+        .coaching-insight p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .feedback-list {
+            margin: 0;
+            padding-left: 18px;
+            color: var(--ink);
+            line-height: 1.65;
+        }
+
+        .feedback-list li + li {
+            margin-top: 8px;
+        }
+
+        .transcript-box {
+            margin-top: 10px;
+            padding: 12px 14px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+            color: var(--ink);
+            white-space: pre-wrap;
+            line-height: 1.65;
+        }
+
+        .video-frame-sm {
+            width: 100%;
+            aspect-ratio: 16/9;
+            overflow: hidden;
+            border: 1px solid #b8c7d5;
+            border-radius: 10px;
+            background: #0f172a;
+        }
+
+        .video-frame-sm video {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #0f172a;
         }
 
         .panel-header {
@@ -683,7 +957,9 @@
             }
 
             .impact-grid,
-            .meta-grid {
+            .meta-grid,
+            .coaching-insights,
+            .coaching-report-summary {
                 grid-template-columns: 1fr;
             }
 
@@ -718,104 +994,82 @@
     <main class="shell">
         <header class="topbar">
             <div class="brand">
-                <div class="brand-mark">IC</div>
-                <div>
-                    <h1>Interview Coach</h1>
-                    <p>Rubric-led communication feedback for self-introductions</p>
-                </div>
-            </div>
-            <div class="status-pill" id="apiStatus"><span class="status-dot"></span><span>Checking API</span></div>
-        </header>
-
-        <section class="hero">
-            <div class="intro">
-                <h2>Practice, score, and improve interview confidence.</h2>
-                <p>
-                    This hackathon project helps students and early-career learners understand how their introduction performs across content, pace, language, clarity, and engagement. It gives transparent feedback instead of a black-box score.
-                </p>
-                <div class="impact-grid">
-                    <div class="impact-item"><strong>5</strong><span>communication dimensions aligned to the rubric</span></div>
-                    <div class="impact-item"><strong>100</strong><span>point score with criterion-level breakdowns</span></div>
-                    <div class="impact-item"><strong>Actionable</strong><span>missing elements, filler words, pace, and structure feedback</span></div>
-                </div>
-            </div>
-            <aside class="rubric-summary">
-                <h3>Score weights</h3>
-                <div id="weightSummary"></div>
-            </aside>
-        </section>
-
-        <section class="video-panel hidden" id="generatedVideoPanel" aria-labelledby="generatedVideoTitle">
-            <div class="video-copy">
-                <h3 id="generatedVideoTitle">Generated interview video</h3>
-                <p>
-                    This video appears after the score script runs. It is refreshed from the project-generated video artifact and displayed alongside the transcript-based rubric report.
-                </p>
-            </div>
-            <div class="video-frame">
-                <video id="generatedVideo" controls preload="metadata">
-                    <source id="generatedVideoSource" src="" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </div>
-        </section>
-
-        <section class="main-grid">
-            <div class="panel">
-                <div class="panel-header">
+                    <div class="brand-mark">AI</div>
                     <div>
-                        <h3>Transcript input</h3>
-                        <p>Paste what the candidate said. After scoring, the UI displays the generated video artifact and the rubric report together.</p>
+                        <h1>AI Self-Introduction Feedback System</h1>
+                        <p>Practice your self-introduction, receive AI-powered feedback, and improve your interview communication.</p>
                     </div>
-                    <button class="info" type="button" aria-label="Transcript scoring information" data-tip="The scorer uses transcript text and optional duration. Duration enables words-per-minute scoring; without it, the Speech Rate metric receives 0 because pace cannot be measured.">i</button>
                 </div>
-                <div class="panel-body">
-                    <label for="transcript">Self-introduction transcript</label>
-                    <textarea id="transcript" placeholder="Example: Hello everyone, my name is Ananya. I am 13 years old and studying in class 8. I live with my parents and sister. I enjoy reading and playing badminton. My goal is to become a doctor. Thank you for listening."></textarea>
+                <div class="status-pill" id="apiStatus"><span class="status-dot"></span><span>Checking API</span></div>
+            </header>
 
-                    <div class="field-row">
-                        <div>
-                            <label for="duration">Duration in seconds</label>
-                            <div class="assist-text">Optional, but needed for WPM. Ideal pace is 111-140 words per minute.</div>
+            <section class="hero">
+                <div class="intro">
+                    <h2>Self-introduction evaluation with instant AI feedback.</h2>
+                    <p>
+                        Enter or upload your self-introduction to receive feedback on structure, clarity, vocabulary, pace, and confidence. The system evaluates your content using the same scoring engine and video workflow already built into the project.
+                    </p>
+                    <div class="impact-grid">
+                        <div class="impact-item"><strong>5</strong><span>rubric categories for self-introduction quality</span></div>
+                        <div class="impact-item"><strong>100</strong><span>overall score with category-level evaluation</span></div>
+                        <div class="impact-item"><strong>AI</strong><span>feedback and generated video summary for improvement</span></div>
+                    </div>
+                </div>
+                <aside class="rubric-summary">
+                    <h3>Assessment Focus</h3>
+                    <div id="weightSummary"></div>
+                </aside>
+            </section>
+
+            <section class="main-grid">
+                <div class="input-card">
+                    <div class="input-card-header">
+                        <h3>Text Input</h3>
+                        <p>Enter or paste your self-introduction to receive AI-powered feedback.</p>
+                    </div>
+                    <div class="input-card-body">
+                        <label for="transcript">Self-Introduction</label>
+                        <textarea id="transcript" placeholder="Enter your self-introduction here..."></textarea>
+
+                        <div class="input-actions">
+                            <button class="btn btn-secondary clear-action" type="button" onclick="clearTextInput()">Clear</button>
+                            <button class="btn btn-primary primary-action" type="button" onclick="scoreTranscript()">Evaluate Introduction</button>
                         </div>
-                        <input type="number" id="duration" min="1" placeholder="52">
                     </div>
+                </div>
 
-                    <div class="actions">
-                        <button class="btn btn-primary" type="button" onclick="scoreTranscript()">Score and generate video</button>
-                        <button class="btn btn-secondary" type="button" onclick="scoreAudio()">Upload audio & score</button>
-                        <button class="btn btn-secondary" type="button" onclick="loadSample()">Load sample</button>
-                        <button class="btn btn-secondary" type="button" onclick="clearAll()">Clear</button>
+                <div class="input-card">
+                    <div class="input-card-header">
+                        <h3>Audio Input</h3>
+                        <p>Upload a recording of your self-introduction. Your speech will be transcribed and evaluated automatically.</p>
                     </div>
-
-                    <div class="audio-upload">
-                        <label for="audioFile" style="margin-bottom: 7px;">Upload self-introduction audio</label>
+                    <div class="input-card-body">
+                        <label for="audioFile">Choose Audio File</label>
                         <input type="file" accept="audio/*" id="audioFile" />
-                        <div class="audio-hint">
-                            The backend will convert your speech to text (Whisper) and then run the same scoring + video generation.
+                        <div class="audio-file-meta" id="audioFileName">No file selected</div>
+
+                        <div class="input-actions">
+                            <button class="btn btn-secondary clear-action" type="button" onclick="clearAudioInput()">Clear</button>
+                            <button class="btn btn-primary primary-action" type="button" onclick="scoreAudio()">Evaluate Recording</button>
                         </div>
                     </div>
-
-
                 </div>
-            </div>
+            </section>
 
-            <div class="panel">
+            <section class="panel" style="margin-top: 24px;">
                 <div class="panel-header">
                     <div>
-                        <h3>Results</h3>
-                        <p>Every score links back to the visible rubric constraints below.</p>
+                        <h3>Self-Introduction Feedback</h3>
+                        <p>Overall score, category results, AI feedback, suggested improvements, and generated feedback video.</p>
                     </div>
-                    <button class="info" type="button" aria-label="Overall score formula" data-tip="Overall score is the sum of each criterion's normalized weighted score. Each criterion converts its metric points into the assigned rubric weight.">i</button>
+                    <button class="info" type="button" aria-label="Self-introduction feedback overview" data-tip="The feedback report uses the real backend response to summarize the overall score, category scores, and improvement areas from the existing scoring engine.">i</button>
                 </div>
-                <div class="loading" id="loading">Analyzing transcript...</div>
+                <div class="loading" id="loading">Analyzing your self-introduction and generating feedback video...</div>
                 <div class="results" id="results">
                     <div class="score-stage">
                         <div>
                             <strong>Your report will appear here.</strong>
-                            Add a transcript, include duration when available, and run the scorer.
-                        </div>
-                    </div>
+                            Enter a self-introduction or upload an audio recording to begin.
                 </div>
             </div>
         </section>
@@ -823,8 +1077,8 @@
         <section class="panel" style="margin-top: 24px;">
             <div class="panel-header">
                 <div>
-                    <h3>Scoring constraints</h3>
-                    <p>These are the rules and thresholds currently used by the project.</p>
+                    <h3>Self-Introduction Evaluation Criteria</h3>
+                    <p>These are the criteria used by the AI system to evaluate your self-introduction.</p>
                 </div>
                 <button class="info" type="button" aria-label="Rubric transparency information" data-tip="Transparent constraints help learners see what to practice next: completeness, pacing, grammar habits, vocabulary range, filler control, and positive confidence.">i</button>
             </div>
@@ -849,64 +1103,75 @@
 
         const API_URL = resolveApiBaseUrl();
         let rubricData = null;
+        let activeVideoJobId = null;
+        let scoringRequestActive = false;
 
         async function fetchJson(path, options = {}) {
-            const candidates = [];
             const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+            const baseUrl = window.location.protocol === "file:" ? "http://localhost:5000" : API_URL;
+            const response = await fetch(`${baseUrl}${normalizedPath}`, options);
+            const text = await response.text();
 
-            if (window.location.protocol === "file:") {
-                candidates.push(`http://localhost:5000${normalizedPath}`);
-            } else {
-                candidates.push(`${API_URL}${normalizedPath}`);
-                if (API_URL !== "http://localhost:5000") {
-                    candidates.push(`http://localhost:5000${normalizedPath}`);
+            if (!text) {
+                if (!response.ok) {
+                    throw new Error(`Request failed with status ${response.status}`);
                 }
+                return {};
             }
 
-            let lastError = null;
-
-            for (const url of candidates) {
-                try {
-                    const response = await fetch(url, options);
-                    const text = await response.text();
-
-                    if (!text) {
-                        if (!response.ok) {
-                            throw new Error(`Request failed with status ${response.status}`);
-                        }
-                        return {};
-                    }
-
-                    let data;
-                    try {
-                        data = JSON.parse(text);
-                    } catch (parseError) {
-                        throw new Error("The server returned HTML instead of JSON. Make sure the Flask backend is running on port 5000.");
-                    }
-
-                    if (!response.ok) {
-                        throw new Error(data.error || data.message || `Request failed with status ${response.status}`);
-                    }
-
-                    return data;
-                } catch (error) {
-                    lastError = error;
-                }
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch (parseError) {
+                throw new Error("The server returned an invalid response. Make sure the Flask backend is running.");
             }
 
-            throw lastError || new Error("Unable to reach the API.");
+            if (!response.ok) {
+                throw new Error(data.error || data.message || `Request failed with status ${response.status}`);
+            }
+
+            return data;
         }
 
-        const metricTips = {
-            "Salutation Level": "Checks for a strong opening near the start. Normal greetings score lower than warm or enthusiastic greetings.",
-            "Keyword Presence": "Looks for required introduction elements: name, age, school or class, family, hobbies, plus optional depth such as ambition and achievements.",
-            "Flow": "Checks whether the answer follows a logical order: greeting, name, details, optional details, and closing.",
-            "Words Per Minute": "Uses word count divided by duration. Ideal range is 111-140 WPM; too slow or too fast reduces the score.",
-            "Grammar Score": "Uses simple grammar heuristics. Formula: 1 - min(errors per 100 words / 10, 1).",
-            "Vocabulary Richness": "Uses type-token ratio: distinct words divided by total words.",
-            "Filler Word Rate": "Counts fillers such as um, uh, like, you know, actually, basically, and similar words.",
-            "Sentiment/Positivity": "Estimates positive tone from confident, enthusiastic, and positive words."
-        };
+        const assessmentFocusMap = new Map([
+            ["content and structure", { name: "Content & Structure", description: "Completeness, organization, and flow" }],
+            ["speech rate", { name: "Speech Rate", description: "Speaking pace and delivery" }],
+            ["language and grammar", { name: "Language & Grammar", description: "Grammar and vocabulary quality" }],
+            ["clarity", { name: "Clarity", description: "Clear communication and filler-word usage" }],
+            ["engagement", { name: "Engagement", description: "Positive and engaging delivery" }]
+        ]);
+
+        function normalizeCriterionName(value) {
+            return String(value || "")
+                .toLowerCase()
+                .replace(/&/g, "and")
+                .replace(/[^a-z0-9]+/g, " ")
+                .trim();
+        }
+
+        function getAssessmentFocusInfo(criterionName) {
+            const normalized = normalizeCriterionName(criterionName);
+            return assessmentFocusMap.get(normalized) || { name: criterionName, description: "" };
+        }
+
+        function getCriterionDescription(criterionName) {
+            const descriptions = {
+                "Content & Structure": "This criterion checks whether your self-introduction is complete, logically organized, and easy to follow.",
+                "Speech Rate": "This criterion evaluates your speaking pace and overall delivery rhythm during the self-introduction.",
+                "Language & Grammar": "This criterion looks at the quality of your grammar, vocabulary, and sentence clarity in the introduction.",
+                "Clarity": "This criterion measures how clearly you communicate and how effectively you avoid filler words and unclear phrasing.",
+                "Engagement": "This criterion reflects how positive, confident, and engaging your delivery sounds to the listener."
+            };
+
+            const normalized = normalizeCriterionName(criterionName);
+            for (const [key, value] of Object.entries(descriptions)) {
+                if (normalizeCriterionName(key) === normalized) {
+                    return value;
+                }
+            }
+
+            return "This category evaluates the strength of your self-introduction based on the project rubric.";
+        }
 
         function escapeHtml(value) {
             return String(value ?? "")
@@ -944,44 +1209,33 @@
         }
 
         function renderWeights(data) {
-            const html = data.criteria.map(criterion => `
-                <div class="weight-row">
-                    <span>${escapeHtml(criterion.name)}</span>
-                    <strong>${criterion.weight}%</strong>
-                    <div class="weight-track"><div class="weight-fill" style="width:${criterion.weight}%"></div></div>
-                </div>
-            `).join("");
+            const html = data.criteria.map(criterion => {
+                const info = getAssessmentFocusInfo(criterion.name);
+                return `
+                    <div class="weight-row">
+                        <div class="weight-label">
+                            <span>${escapeHtml(info.name)}</span>
+                            <small>${escapeHtml(info.description)}</small>
+                        </div>
+                        <strong>${criterion.weight}%</strong>
+                        <div class="weight-track"><div class="weight-fill" style="width:${criterion.weight}%"></div></div>
+                    </div>
+                `;
+            }).join("");
             document.getElementById("weightSummary").innerHTML = html;
-        }
-
-        function describeMetric(metric) {
-            if (metric.name === "Keyword Presence") {
-                const required = metric.must_have.map(item => item.keyword).join(", ");
-                const optional = metric.good_to_have.map(item => item.keyword).join(", ");
-                return `Must-have: ${required}. Good-to-have: ${optional}.`;
-            }
-            if (metric.scoring) {
-                return metric.scoring.map(item => {
-                    const range = item.range ? `${item.range[0]}-${item.range[1]}` : item.level;
-                    const label = item.level ? `${item.level}: ` : "";
-                    return `${label}${range} gives ${item.score}/${metric.max_score}`;
-                }).join("; ");
-            }
-            return metric.description || metricTips[metric.name] || "Rubric metric.";
         }
 
         function renderRubrics(data) {
             const html = data.criteria.map(criterion => {
-                const metrics = criterion.metrics.map(metric => `
-                    <p><strong>${escapeHtml(metric.name)} (${metric.max_score} pts):</strong> ${escapeHtml(describeMetric(metric))}</p>
-                `).join("");
+                const info = getAssessmentFocusInfo(criterion.name);
+                const description = getCriterionDescription(info.name);
                 return `
                     <article class="rule">
                         <div class="rule-head">
-                            <h4>${escapeHtml(criterion.name)} - ${criterion.weight}%</h4>
-                            <button class="info" type="button" aria-label="${escapeHtml(criterion.name)} info" data-tip="${escapeHtml(criterion.metrics.map(m => `${m.name}: ${m.max_score} pts`).join(" | "))}">i</button>
+                            <h4>${escapeHtml(info.name)} - ${criterion.weight}%</h4>
+                            <button class="info" type="button" aria-label="${escapeHtml(info.name)} info" data-tip="${escapeHtml(description)}">i</button>
                         </div>
-                        ${metrics}
+                        <p>${escapeHtml(description)}</p>
                     </article>
                 `;
             }).join("");
@@ -990,22 +1244,22 @@
 
         async function scoreTranscript() {
             const transcript = document.getElementById("transcript").value.trim();
-            const duration = document.getElementById("duration").value;
 
+            if (scoringRequestActive) return;
             if (!transcript) {
                 showError("Please enter a transcript to score.");
                 return;
             }
 
+            scoringRequestActive = true;
+            activeVideoJobId = null;
+            document.querySelectorAll(".primary-action, .clear-action").forEach(button => button.disabled = true);
             document.getElementById("loading").classList.add("active");
-            document.getElementById("loading").textContent = "Scoring transcript and preparing generated video...";
+            document.getElementById("loading").textContent = "Analyzing your self-introduction...";
             document.getElementById("results").classList.remove("active");
-            document.getElementById("generatedVideoPanel").classList.add("hidden");
 
             try {
                 const payload = { transcript };
-                if (duration) payload.duration_seconds = parseInt(duration, 10);
-
                 const data = await fetchJson("/api/score", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -1017,29 +1271,32 @@
             } catch (error) {
                 showError(error.message || "Failed to connect to API. Make sure the backend is running.");
             } finally {
+                scoringRequestActive = false;
+                document.querySelectorAll(".primary-action, .clear-action").forEach(button => button.disabled = false);
                 document.getElementById("loading").classList.remove("active");
             }
         }
 
         async function scoreAudio() {
-            const duration = document.getElementById("duration").value;
             const fileInput = document.getElementById("audioFile");
             const file = fileInput && fileInput.files && fileInput.files[0] ? fileInput.files[0] : null;
 
+            if (scoringRequestActive) return;
             if (!file) {
                 showError("Please select an audio file to score.");
                 return;
             }
 
+            scoringRequestActive = true;
+            activeVideoJobId = null;
+            document.querySelectorAll(".primary-action, .clear-action").forEach(button => button.disabled = true);
             document.getElementById("loading").classList.add("active");
-            document.getElementById("loading").textContent = "Transcribing audio (Whisper) and preparing generated video...";
+            document.getElementById("loading").textContent = "Transcribing and analyzing your self-introduction...";
             document.getElementById("results").classList.remove("active");
-            document.getElementById("generatedVideoPanel").classList.add("hidden");
 
             try {
                 const formData = new FormData();
                 formData.append("audio", file);
-                if (duration) formData.append("duration_seconds", parseInt(duration, 10));
 
                 const data = await fetchJson("/api/score-audio", {
                     method: "POST",
@@ -1055,96 +1312,385 @@
             } catch (error) {
                 showError(error.message || "Failed to connect to API. Make sure the backend is running.");
             } finally {
+                scoringRequestActive = false;
+                document.querySelectorAll(".primary-action, .clear-action").forEach(button => button.disabled = false);
                 document.getElementById("loading").classList.remove("active");
             }
         }
 
 
+        function findMetric(criterion, metricName) {
+            return (criterion && criterion.metrics || []).find(metric =>
+                normalizeCriterionName(metric.metric || metric.name) === normalizeCriterionName(metricName)
+            );
+        }
+
+        function readableList(values) {
+            if (!values.length) return "";
+            const visibleValues = values.slice(0, 4);
+            let result = visibleValues.length < 2
+                ? visibleValues[0]
+                : visibleValues.length === 2
+                    ? `${visibleValues[0]} and ${visibleValues[1]}`
+                    : `${visibleValues.slice(0, -1).join(", ")}, and ${visibleValues[visibleValues.length - 1]}`;
+            const remainingCount = values.length - visibleValues.length;
+            if (remainingCount > 0) result += `, plus ${remainingCount} other details`;
+            return result;
+        }
+
+        function getCoachingDetails(criterion, data) {
+            const name = normalizeCriterionName(criterion.criterion);
+            const audioInput = Boolean(data.transcript_extracted);
+
+            if (name === "content and structure") {
+                const keywordMetric = findMetric(criterion, "Keyword Presence");
+                const keywordLabels = {
+                    name: "your name",
+                    age: "your age, when relevant",
+                    "school/class": "your school or college",
+                    family: "family background",
+                    hobbies: "hobbies or interests",
+                    about_family: "a little more about your family",
+                    origin: "where you are from",
+                    ambition: "a career goal",
+                    unique_fact: "a personal detail",
+                    achievements: "an achievement or strength"
+                };
+                const found = [];
+                const missing = [];
+                Object.entries(keywordMetric && keywordMetric.keywords_found || {}).forEach(([key, value]) => {
+                    const label = keywordLabels[key] || "a personal detail";
+                    (value.found ? found : missing).push(label);
+                });
+                const uniqueFound = [...new Set(found)];
+                const uniqueMissing = [...new Set(missing)];
+                const flow = findMetric(criterion, "Flow");
+                const flowFeedback = String(flow && flow.feedback || "").toLowerCase();
+                const flowWins = [];
+                if (flowFeedback.includes("opening salutation")) flowWins.push("opens with a greeting");
+                if (flowFeedback.includes("name introduced")) flowWins.push("introduces the speaker near the start");
+                if (flowFeedback.includes("proper closing")) flowWins.push("includes a closing");
+                const strengths = [];
+                if (uniqueFound.length) strengths.push(`Includes ${readableList(uniqueFound)}.`);
+                if (flowWins.length) strengths.push(`The introduction ${readableList(flowWins)}.`);
+                const improvements = uniqueMissing.length
+                    ? [`Consider adding ${readableList(uniqueMissing)} to make the introduction more complete.`]
+                    : [];
+                const summary = uniqueMissing.length
+                    ? `The introduction includes ${uniqueFound.length ? readableList(uniqueFound) : "some personal details"}; adding ${readableList(uniqueMissing)} could make it more complete.`
+                    : `The introduction includes ${uniqueFound.length ? readableList(uniqueFound) : "the recognized personal details"} from the rubric.`;
+                return {
+                    strengths,
+                    improvements,
+                    recommendation: uniqueMissing.length
+                        ? `Add ${readableList(uniqueMissing)} when relevant, then connect the details between an opening and closing.`
+                        : "Maintain the current structure and keep transitions between personal details concise.",
+                    summary,
+                    notAssessed: false
+                };
+            }
+
+            if (name === "speech rate") {
+                const metric = findMetric(criterion, "Words Per Minute");
+                const rawWpm = data.metadata && data.metadata.wpm != null
+                    ? Number(data.metadata.wpm)
+                    : Number(metric && metric.wpm);
+                const hasWpm = typeof rawWpm === "number" && Number.isFinite(rawWpm);
+                const assessmentByLevel = {
+                    Ideal: "within the recommended range",
+                    Fast: "slightly above the recommended range",
+                    "Too Fast": "above the recommended range",
+                    Slow: "slightly below the recommended range",
+                    "Too Slow": "below the recommended range"
+                };
+                const delivery = !audioInput
+                    ? "Speech rate is not evaluated for text-only submissions."
+                    : hasWpm
+                        ? `Your speaking rate is ${Math.round(rawWpm)} WPM, ${assessmentByLevel[metric && metric.level] || `scored ${metric.score}/${metric.max_score} by the active rubric`}.`
+                        : "Recording duration is unavailable, so WPM and speech-rate score could not be determined.";
+                const idealPace = hasWpm && metric && metric.level === "Ideal";
+                return {
+                    strengths: idealPace ? [delivery] : [],
+                    improvements: !audioInput
+                        ? [delivery]
+                        : hasWpm && !idealPace
+                            ? [delivery, "Use natural pauses to make each point easy to follow."]
+                            : hasWpm ? [] : [delivery],
+                    recommendation: !audioInput
+                        ? "Submit an audio recording to receive delivery feedback."
+                        : hasWpm && idealPace
+                            ? "Maintain this pace and use natural pauses between ideas."
+                            : hasWpm ? "Practice with a timer and adjust your pace toward the rubric's recommended range." : "Use an audio file with a readable duration to receive speech-rate feedback.",
+                    delivery,
+                    notAssessed: !hasWpm
+                };
+            }
+
+            if (name === "language and grammar") {
+                const grammar = findMetric(criterion, "Grammar Score");
+                const vocabulary = findMetric(criterion, "Vocabulary Richness");
+                const strengths = [];
+                const improvements = [];
+                if (grammar && Number(grammar.errors || 0) === 0) strengths.push("No basic grammar issues were detected.");
+                else if (grammar) improvements.push(`${grammar.errors} potential grammar issue${grammar.errors === 1 ? " was" : "s were"} identified for review.`);
+                if (vocabulary && Number(vocabulary.score) >= Number(vocabulary.max_score)) strengths.push("Word choice shows strong variety across the introduction.");
+                else if (vocabulary) improvements.push("Varying word choice could make the introduction more engaging.");
+                return {
+                    strengths,
+                    improvements,
+                    recommendation: "Review sentence structure and vary repeated words where it feels natural.",
+                    summary: strengths.length
+                        ? strengths.join(" ")
+                        : "Grammar and vocabulary feedback identifies opportunities to refine sentence structure and word choice.",
+                    notAssessed: false
+                };
+            }
+
+            if (name === "clarity") {
+                const metric = findMetric(criterion, "Filler Word Rate");
+                const fillerCount = Number(metric && metric.filler_count || 0);
+                const fillers = (metric && metric.found_fillers || []).map(item => String(item).replace(/\s*\(\d+\)$/, ""));
+                const strengths = fillerCount === 0 ? ["No filler words were detected; the delivery is direct."] : [];
+                const improvements = fillerCount > 0
+                    ? [`The analysis detected ${fillerCount} filler word${fillerCount === 1 ? "" : "s"}${fillers.length ? `, including ${readableList([...new Set(fillers.slice(0, 3))])}` : ""}.`]
+                    : [];
+                return {
+                    strengths,
+                    improvements,
+                    recommendation: fillerCount === 0
+                        ? "Keep sentences focused and use pauses to separate key points."
+                        : `Replace fillers${fillers.length ? ` such as ${readableList([...new Set(fillers.slice(0, 3))])}` : ""} with brief pauses.`,
+                    summary: fillerCount === 0 ? "The introduction is direct, with no detected filler words." : `The introduction contains ${fillerCount} detected filler word${fillerCount === 1 ? "" : "s"}.`,
+                    notAssessed: false
+                };
+            }
+
+            if (name === "engagement") {
+                const metric = findMetric(criterion, "Sentiment/Positivity");
+                const positiveWords = Number(metric && metric.positive_words || 0);
+                const negativeWords = Number(metric && metric.negative_words || 0);
+                const positiveTone = positiveWords > negativeWords;
+                return {
+                    strengths: positiveTone ? ["The introduction uses positive, engaging language."] : [],
+                    improvements: positiveTone
+                        ? []
+                        : [`The sentiment check found ${positiveWords} positive and ${negativeWords} negative indicator${negativeWords === 1 ? "" : "s"}; specific positive details could strengthen the tone.`],
+                    recommendation: "Include a specific interest, achievement, or goal using positive, audience-focused language.",
+                    summary: positiveTone
+                        ? "The introduction uses positive language, based on the words detected by the sentiment check."
+                        : "The sentiment check found limited positive wording in the introduction.",
+                    notAssessed: false
+                };
+            }
+
+            return {
+                strengths: [],
+                improvements: [],
+                recommendation: "Review this category's rubric feedback and focus on one practical improvement.",
+                summary: "This category was evaluated using the active rubric.",
+                notAssessed: false
+            };
+        }
+
+        function formatDuration(seconds) {
+            if (typeof seconds !== "number" || !Number.isFinite(seconds) || seconds <= 0) {
+                return "Not available";
+            }
+            const totalSeconds = Math.round(seconds);
+            if (totalSeconds < 60) return `${totalSeconds} sec`;
+            const minutes = Math.floor(totalSeconds / 60);
+            const remainder = String(totalSeconds % 60).padStart(2, "0");
+            return `${minutes}m ${remainder}s`;
+        }
+
+        function renderFeedbackList(items, emptyText) {
+            const entries = items.length ? items : [emptyText];
+            return `<ul class="feedback-list">${entries.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`;
+        }
+
+        function buildOverallFeedback(categories, overallScore) {
+            const content = categories.find(item => normalizeCriterionName(item.criterion.criterion) === "content and structure");
+            const speechRate = categories.find(item => normalizeCriterionName(item.criterion.criterion) === "speech rate");
+            const assessedCategories = categories.filter(item => !item.coaching.notAssessed);
+            const rankedCategories = [...assessedCategories].sort((left, right) => {
+                const leftScore = Number(left.criterion.weighted_score || 0) / Number(left.criterion.weight || 1);
+                const rightScore = Number(right.criterion.weighted_score || 0) / Number(right.criterion.weight || 1);
+                return rightScore - leftScore;
+            });
+            const summary = content
+                ? content.coaching.summary
+                : `The assessment returned an overall score of ${overallScore}/100.`;
+            return {
+                summary,
+                strengths: assessedCategories.flatMap(item => item.coaching.strengths).slice(0, 3),
+                improvements: assessedCategories.flatMap(item => item.coaching.improvements).slice(0, 3),
+                recommendation: rankedCategories.length
+                    ? [...rankedCategories].reverse()[0].coaching.recommendation
+                    : "Review the category feedback and choose one practical next step.",
+                delivery: speechRate && speechRate.coaching.delivery
+                    ? speechRate.coaching.delivery
+                    : "Speech rate is not evaluated for text-only submissions."
+            };
+        }
+
         function displayResults(data) {
             const score = Number(data.overall_score || 0);
             const ringDegrees = Math.max(0, Math.min(100, score)) * 3.6;
-            const wpm = data.metadata && data.metadata.wpm ? data.metadata.wpm.toFixed(2) : "Not provided";
-            const duration = data.metadata && data.metadata.duration_seconds ? `${data.metadata.duration_seconds}s` : "Not provided";
-
-            const criteriaHtml = data.criteria_scores.map(criterion => {
-                const percent = criterion.weight ? (criterion.weighted_score / criterion.weight) * 100 : 0;
-                const metrics = criterion.metrics.map(metric => renderMetric(metric)).join("");
+            const metadata = data.metadata || {};
+            const durationSeconds = metadata.duration_seconds;
+            const hasWpm = typeof metadata.wpm === "number" && Number.isFinite(metadata.wpm);
+            const wpm = hasWpm ? `${Math.round(metadata.wpm)}` : "—";
+            const criteria = Array.isArray(data.criteria_scores) ? data.criteria_scores : [];
+            const categories = criteria.map(criterion => ({
+                criterion,
+                coaching: getCoachingDetails(criterion, data)
+            }));
+            const categoriesHtml = categories.map(({ criterion, coaching }) => {
+                const weight = Number(criterion.weight || 0);
+                const weightedScore = Number(criterion.weighted_score || 0);
+                const isUnassessedRate = normalizeCriterionName(criterion.criterion) === "speech rate" && coaching.notAssessed;
+                const percent = weight ? Math.max(0, Math.min(100, weightedScore / weight * 100)) : 0;
+                const formattedScore = Number.isInteger(weightedScore) ? weightedScore : weightedScore.toFixed(1);
+                const scoreText = isUnassessedRate ? `Not assessed / ${weight}` : `${formattedScore} / ${weight}`;
                 return `
-                    <article class="criterion">
-                        <div class="criterion-top">
-                            <div>
-                                <h4>${escapeHtml(criterion.criterion)}</h4>
-                                <div class="progress"><span style="width:${Math.max(0, Math.min(100, percent))}%"></span></div>
-                            </div>
-                            <strong>${criterion.weighted_score}/${criterion.weight}</strong>
+                    <article class="coaching-category">
+                        <div class="coaching-category-head">
+                            <h5>${escapeHtml(criterion.criterion)}</h5>
+                            <strong>${scoreText}</strong>
                         </div>
-                        <div class="metric-grid">${metrics}</div>
+                        <div class="progress"><span style="width:${isUnassessedRate ? 0 : percent}%"></span></div>
+                        <div class="coaching-insights">
+                            <div class="coaching-insight"><strong>Strengths</strong>${renderFeedbackList(coaching.strengths, "No distinct strengths were identified by these rubric measures.")}</div>
+                            <div class="coaching-insight"><strong>Areas for Improvement</strong>${renderFeedbackList(coaching.improvements, "No priority improvements were identified by these rubric measures.")}</div>
+                            <div class="coaching-insight"><strong>Recommended Action</strong><p>${escapeHtml(coaching.recommendation)}</p></div>
+                        </div>
                     </article>
                 `;
             }).join("");
+            const overallFeedback = buildOverallFeedback(categories, score);
+            const transcriptContent = data.transcript_extracted || document.getElementById("transcript").value.trim();
+            const transcriptHTML = transcriptContent
+                ? `<div class="transcript-box">${escapeHtml(transcriptContent)}</div>`
+                : "";
+            const transcriptLabel = data.transcript_extracted ? "Transcribed Self-Introduction" : "Self-Introduction";
 
             document.getElementById("results").innerHTML = `
-                <section class="overall">
-                    <div class="score-ring" style="--score-deg:${ringDegrees}deg"><div><strong>${score}</strong><span>/100</span></div></div>
-                    <div>
-                        <h3>Overall interview readiness score</h3>
-                        <p class="assist-text">Use the lowest metric scores as your practice plan for the next attempt.</p>
+                <div class="result-shell">
+                    <div class="detail-card">
+                        <h4>Performance Summary</h4>
                         <div class="meta-grid">
-                            <div class="meta"><span>Words</span><strong>${data.word_count}</strong></div>
+                            <div class="meta"><span>Words</span><strong>${escapeHtml(data.word_count ?? "—")}</strong></div>
                             <div class="meta"><span>WPM</span><strong>${wpm}</strong></div>
-                            <div class="meta"><span>Duration</span><strong>${duration}</strong></div>
+                            <div class="meta"><span>Duration</span><strong>${escapeHtml(formatDuration(durationSeconds))}</strong></div>
                         </div>
                     </div>
-                </section>
-                <section class="criteria">${criteriaHtml}</section>
+
+                    <section class="detail-card coaching-report">
+                        <h4>AI Self-Introduction Feedback</h4>
+                        <div class="coaching-report-summary">
+                            <div class="coaching-score">
+                                <h5>Overall Score</h5>
+                                <div class="overall-score" style="--score-deg:${ringDegrees}deg"><span>${score}</span></div>
+                            </div>
+                            <div class="coaching-overall">
+                                <strong>Overall Feedback</strong>
+                                <div class="coaching-insights">
+                                    <div class="coaching-insight"><strong>Summary</strong><p>${escapeHtml(overallFeedback.summary)}</p></div>
+                                    <div class="coaching-insight"><strong>Strengths</strong>${renderFeedbackList(overallFeedback.strengths, "The rubric did not identify a distinct strength across categories.")}</div>
+                                    <div class="coaching-insight"><strong>Areas for Improvement</strong>${renderFeedbackList(overallFeedback.improvements, "The rubric did not identify a priority improvement across categories.")}</div>
+                                    <div class="coaching-insight"><strong>Recommendation</strong><p>${escapeHtml(overallFeedback.recommendation)}</p></div>
+                                    <div class="coaching-insight"><strong>Delivery</strong><p>${escapeHtml(overallFeedback.delivery)}</p></div>
+                                </div>
+                            </div>
+                        </div>
+                        <h4 style="margin-top: 20px;">Category Performance</h4>
+                        ${categoriesHtml || '<p class="assist-text">Category feedback is not available.</p>'}
+                    </section>
+
+                    <div class="transcript-card">
+                        <h4>${transcriptLabel}</h4>
+                        ${transcriptHTML || '<div class="assist-text">No transcript available yet.</div>'}
+                    </div>
+
+                    <div class="video-card">
+                        <h4>Generated Feedback Video</h4>
+                        <p class="assist-text" id="generatedVideoStatus" role="status">Generating feedback video...</p>
+                        <div class="video-frame-sm">
+                            <video id="generatedVideo" controls preload="metadata">
+                                <source id="generatedVideoSource" src="" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    </div>
+                </div>
             `;
             document.getElementById("results").classList.add("active");
             document.getElementById("results").scrollIntoView({ behavior: "smooth", block: "start" });
         }
 
         function showGeneratedVideo(videoData) {
-            if (!videoData || !videoData.video_url) return;
-            const panel = document.getElementById("generatedVideoPanel");
             const video = document.getElementById("generatedVideo");
             const source = document.getElementById("generatedVideoSource");
+            const status = document.getElementById("generatedVideoStatus");
 
-            source.src = videoData.video_url;
-            video.load();
-            panel.classList.remove("hidden");
+            if (videoData && videoData.video_url) {
+                activeVideoJobId = null;
+                if (source && video) {
+                    source.src = videoData.video_url;
+                    video.load();
+                }
+                if (status) status.textContent = "Feedback video ready.";
+                return;
+            }
+
+            if (videoData && videoData.status === "processing" && videoData.job_id) {
+                activeVideoJobId = videoData.job_id;
+                if (status) status.textContent = "Feedback ready. Generating your feedback video...";
+                pollVideoStatus(videoData.job_id);
+                return;
+            }
+
+            activeVideoJobId = null;
+            if (status) {
+                status.textContent = "Feedback generated successfully, but the video could not be generated.";
+            }
+            if (video && source) {
+                source.src = "";
+                video.load();
+            }
         }
 
-        function renderMetric(metric) {
-            const tip = metricTips[metric.metric] || "Metric score from the active rubric.";
-            let tags = "";
+        async function pollVideoStatus(jobId) {
+            let delayMs = 1200;
+            while (activeVideoJobId === jobId) {
+                await new Promise(resolve => setTimeout(resolve, delayMs));
+                if (activeVideoJobId !== jobId) return;
 
-            if (metric.keywords_found) {
-                if (Array.isArray(metric.keywords_found)) {
-                    tags = metric.keywords_found.map(item => `<span class="tag">${escapeHtml(item)}</span>`).join("");
-                } else {
-                    tags = Object.entries(metric.keywords_found).map(([key, value]) => `
-                        <span class="tag ${value.found ? "" : "missing"}">${value.found ? "Found" : "Missing"}: ${escapeHtml(key)}</span>
-                    `).join("");
+                try {
+                    const data = await fetchJson(`/api/video-status/${encodeURIComponent(jobId)}`);
+                    if (data.status === "completed") {
+                        showGeneratedVideo(data.generated_video);
+                        return;
+                    }
+                    if (data.status === "failed") {
+                        activeVideoJobId = null;
+                        const status = document.getElementById("generatedVideoStatus");
+                        if (status) status.textContent = "Feedback generated successfully, but the video could not be generated.";
+                        return;
+                    }
+                    delayMs = Math.min(Math.round(delayMs * 1.5), 5000);
+                } catch (error) {
+                    activeVideoJobId = null;
+                    const status = document.getElementById("generatedVideoStatus");
+                    if (status) status.textContent = "Feedback generated successfully, but the video could not be generated.";
+                    return;
                 }
             }
-
-            if (metric.found_fillers && metric.found_fillers.length) {
-                tags += metric.found_fillers.map(item => `<span class="tag missing">${escapeHtml(item)}</span>`).join("");
-            }
-
-            return `
-                <div class="metric">
-                    <div class="metric-head">
-                        <span class="metric-title">${escapeHtml(metric.metric)} <button class="info" type="button" aria-label="${escapeHtml(metric.metric)} info" data-tip="${escapeHtml(tip)}">i</button></span>
-                        <strong>${metric.score}/${metric.max_score}</strong>
-                    </div>
-                    <small>${escapeHtml(metric.feedback)}</small>
-                    ${tags ? `<div class="tags">${tags}</div>` : ""}
-                </div>
-            `;
         }
 
         function showError(message) {
-            document.getElementById("results").innerHTML = `<div class="error"><strong>Error:</strong> ${escapeHtml(message)}</div>`;
+            const safeMessage = message || "The request could not be completed. Please try again.";
+            document.getElementById("results").innerHTML = `<div class="error"><strong>Error:</strong> ${escapeHtml(safeMessage)}</div>`;
             document.getElementById("results").classList.add("active");
         }
 
@@ -1152,21 +1698,39 @@
             try {
                 const data = await fetchJson("/api/sample");
                 document.getElementById("transcript").value = data.transcript;
-                document.getElementById("duration").value = "52";
             } catch (error) {
                 showError(error.message || "Failed to connect to API.");
             }
         }
 
-        function clearAll() {
-            document.getElementById("transcript").value = "";
-            document.getElementById("duration").value = "";
+        function resetDisplayedResults() {
+            activeVideoJobId = null;
+            const video = document.getElementById("generatedVideo");
+            const source = document.getElementById("generatedVideoSource");
+            if (video && source) {
+                video.pause();
+                source.removeAttribute("src");
+                video.load();
+            }
             document.getElementById("loading").classList.remove("active");
-            document.getElementById("generatedVideoPanel").classList.add("hidden");
-            document.getElementById("generatedVideoSource").src = "";
-            document.getElementById("generatedVideo").load();
-            document.getElementById("results").innerHTML = '<div class="score-stage"><div><strong>Your report will appear here.</strong>Add a transcript, include duration when available, and run the scorer.</div></div>';
+            document.getElementById("results").innerHTML = '<div class="score-stage"><div><strong>Your report will appear here.</strong>Add a transcript or upload an audio recording to begin.</div></div>';
             document.getElementById("results").classList.add("active");
+        }
+
+        function clearTextInput() {
+            if (scoringRequestActive) return;
+            document.getElementById("transcript").value = "";
+            resetDisplayedResults();
+            document.getElementById("transcript").focus();
+        }
+
+        function clearAudioInput() {
+            if (scoringRequestActive) return;
+            const fileInput = document.getElementById("audioFile");
+            fileInput.value = "";
+            document.getElementById("audioFileName").textContent = "No file selected";
+            resetDisplayedResults();
+            fileInput.focus();
         }
 
         document.getElementById("transcript").addEventListener("keydown", event => {
@@ -1177,14 +1741,11 @@
 
         document.getElementById("audioFile").addEventListener("change", event => {
             const file = event.target.files[0];
+            const meta = document.getElementById("audioFileName");
             if (file) {
-                const audio = new Audio();
-                audio.src = URL.createObjectURL(file);
-                audio.addEventListener("loadedmetadata", () => {
-                    if (audio.duration && !isNaN(audio.duration)) {
-                        document.getElementById("duration").value = Math.round(audio.duration);
-                    }
-                });
+                meta.textContent = file.name;
+            } else {
+                meta.textContent = "No file selected";
             }
         });
 

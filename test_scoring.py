@@ -5,6 +5,8 @@ from rubric_parser import RubricParser
 from scoring_engine import ScoringEngine
 import json
 
+__test__ = False
+
 def test_scoring():
     print("="*80)
     print("Communication Skills Scoring Tool - Test")

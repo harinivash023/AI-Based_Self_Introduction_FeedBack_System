@@ -1,16 +1,45 @@
 """
 Scoring Engine - Combines rule-based, NLP-based, and rubric-driven scoring
 """
+import math
 import os
 import re
 
 os.environ.setdefault("USE_TF", "0")
+
 
 class ScoringEngine:
     def __init__(self, rubrics):
         self.rubrics = rubrics
         self.model = None
         self.model_load_failed = False
+        self.greeting_patterns = [
+            "Hello everyone, I am happy to introduce myself",
+            "Good morning, I am excited to be here",
+            "Hi, my name is"
+        ]
+        self._greeting_embeddings = None
+
+    @staticmethod
+    def normalize_duration(duration_seconds):
+        """Validate and normalize duration input used for WPM calculations."""
+        if duration_seconds is None:
+            return None
+
+        if isinstance(duration_seconds, str):
+            duration_seconds = duration_seconds.strip()
+            if not duration_seconds:
+                return None
+
+        try:
+            duration_seconds = float(duration_seconds)
+        except (TypeError, ValueError):
+            raise ValueError("duration_seconds must be a positive number.")
+
+        if not math.isfinite(duration_seconds) or duration_seconds <= 0:
+            raise ValueError("duration_seconds must be a positive number.")
+
+        return duration_seconds
 
     def get_model(self):
         """Load the semantic model only when a metric needs it."""
@@ -32,21 +61,22 @@ class ScoringEngine:
         Main scoring function
         Returns: dict with overall score and per-criterion scores
         """
+        normalized_duration = self.normalize_duration(duration_seconds)
         words = transcript.split()
         word_count = len(words)
-        
+
         # Calculate WPM if duration provided
         wpm = None
-        if duration_seconds:
-            wpm = (word_count / duration_seconds) * 60
-        
+        if normalized_duration is not None:
+            wpm = (word_count / normalized_duration) * 60
+
         results = {
             "overall_score": 0,
             "word_count": word_count,
             "criteria_scores": [],
             "metadata": {
                 "wpm": wpm,
-                "duration_seconds": duration_seconds
+                "duration_seconds": normalized_duration
             }
         }
         
@@ -150,16 +180,12 @@ class ScoringEngine:
                     "feedback": f"Salutation: {matched_level} (Score: {score}/{metric['max_score']})"
                 }
 
-            greeting_patterns = [
-                "Hello everyone, I am happy to introduce myself",
-                "Good morning, I am excited to be here",
-                "Hi, my name is"
-            ]
-            
+            if self._greeting_embeddings is None:
+                self._greeting_embeddings = model.encode(self.greeting_patterns)
+
             first_sent_embedding = model.encode([first_sentence])
-            pattern_embeddings = model.encode(greeting_patterns)
             from sklearn.metrics.pairwise import cosine_similarity
-            similarities = cosine_similarity(first_sent_embedding, pattern_embeddings)[0]
+            similarities = cosine_similarity(first_sent_embedding, self._greeting_embeddings)[0]
             max_similarity = max(similarities)
             
             if max_similarity > 0.5:
@@ -289,10 +315,11 @@ class ScoringEngine:
         
         score = 0
         level = "Unknown"
+        assessed_wpm = math.floor(wpm + 0.5)
         
         for range_data in metric["scoring"]:
             min_wpm, max_wpm = range_data["range"]
-            if min_wpm <= wpm <= max_wpm:
+            if min_wpm <= assessed_wpm <= max_wpm:
                 score = range_data["score"]
                 level = range_data["level"]
                 break

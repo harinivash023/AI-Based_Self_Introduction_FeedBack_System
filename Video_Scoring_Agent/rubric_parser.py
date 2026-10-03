@@ -3,10 +3,14 @@ Rubric Parser - Extracts rubrics and scoring criteria from Excel file
 """
 import pandas as pd
 import json
+import os
 
 class RubricParser:
-    def __init__(self, excel_file='Case study for interns.xlsx'):
-        self.excel_file = excel_file
+    def __init__(self, excel_file=None):
+        self.excel_file = excel_file or os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            'Case study for interns.xlsx'
+        )
         self.rubrics = None
         self.sample_transcript = None
         self.parse_excel()

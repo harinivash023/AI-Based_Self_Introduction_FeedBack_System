@@ -244,3 +244,4 @@ If no video path is supplied, the script attempts to create a sample video using
 - Rubric loading depends on the workbook name and the `Rubrics` worksheet.
 - Generated files use fixed names, so a new score replaces the previous generated video.
 - `app.py` uses Flask debug mode and is intended for local development, not production deployment without hardening.
+
