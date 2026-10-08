@@ -105,6 +105,10 @@ GENERATED_VIDEO_NAME = "generated_interview_video.mp4"
 NARRATION_TEXT_NAME = "narration_script.txt"
 NARRATION_WAV_NAME = "narration.wav"
 VIDEO_ONLY_NAME = "generated_interview_video_silent.mp4"
+VIDEO_FILE_EXTENSIONS = {
+    ".3gp", ".avi", ".flv", ".m2ts", ".m4v", ".mkv", ".mov", ".mp4",
+    ".mpeg", ".mpg", ".mts", ".ts", ".webm", ".wmv",
+}
 latest_generated_video_name = GENERATED_VIDEO_NAME
 video_executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="feedback-video")
 video_jobs = {}
@@ -629,8 +633,12 @@ def score_audio():
         if not audio_file or not audio_file.filename:
             return jsonify({"error": "Audio filename is empty."}), 400
 
-        os.makedirs(GENERATED_DIR, exist_ok=True)
         filename = secure_filename(audio_file.filename)
+        extension = os.path.splitext(filename)[1].lower()
+        if audio_file.mimetype.lower().startswith("video/") or extension in VIDEO_FILE_EXTENSIONS:
+            return jsonify({"error": "Video uploads are not supported. Please upload an audio file."}), 400
+
+        os.makedirs(GENERATED_DIR, exist_ok=True)
         unique_prefix = uuid.uuid4().hex
         saved_audio_path = os.path.join(GENERATED_DIR, f"upload_{unique_prefix}_{filename}")
         audio_file.save(saved_audio_path)

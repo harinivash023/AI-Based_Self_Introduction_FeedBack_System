@@ -1,113 +1,108 @@
-# Self Introduction Feedback System
+# Self-Introduction Feedback System
 
-Interview Coach is a Python application for practicing and evaluating spoken self-introductions. It scores transcript content, speaking pace, language, clarity, and engagement using a transparent communication rubric. It also supports audio transcription and generates a short coaching video after scoring.
+A Flask application for practicing spoken self-introductions. Submit a typed transcript or an audio recording to receive a rubric-based score and actionable feedback. Audio is transcribed locally with Whisper. After scoring, the app generates a short MP4 feedback video asynchronously and makes it available in the browser.
 
-The repository contains two related entry points:
+**Current inputs:** text and audio. **Current outputs:** score, detailed feedback, and a generated feedback video. User-uploaded video scoring is not supported.
 
-- A Flask web application for transcript and audio scoring.
-- A standalone video-scoring pipeline under `Video_Scoring_Agent/`.
+## Key Highlights
 
-## Features
-
-- Responsive browser interface served by Flask.
-- Transcript scoring through the web UI or `POST /api/score`.
-- Audio upload and speech-to-text transcription through `POST /api/score-audio`.
-- Optional duration input for words-per-minute analysis.
-- Rubric loaded from `Case study for interns.xlsx`.
-- Overall score out of 100 with criterion and metric feedback.
-- Keyword, flow, grammar, vocabulary, filler-word, pace, and positivity feedback.
-- Generated MP4 coaching explanation with optional Windows narration audio.
-- Standalone video-file processing and report generation.
-
-## Technology Stack
-
-| Technology | Where it is used | Why it is used |
-| --- | --- | --- |
-| Python 3.10+ | Application and scoring logic | Runtime for the API, scoring engine, NLP pipeline, and media processing. |
-| Flask | `app.py` | Serves the frontend and exposes REST API endpoints. |
-| Flask-CORS | Flask API | Allows browser clients to call the API when the frontend is opened separately. |
-| HTML5, CSS3, vanilla JavaScript | `index.html` | Provides a lightweight responsive frontend without a frontend framework. |
-| pandas and openpyxl | `rubric_parser.py` | Reads the Excel workbook and exposes the rubric to the scorer. |
-| Custom Python rules | `scoring_engine.py` | Implements keyword detection, flow checks, WPM, grammar heuristics, TTR, filler rate, and positivity scoring. |
-| sentence-transformers | `scoring_engine.py` | Provides optional `all-MiniLM-L6-v2` embeddings for semantic greeting matching. |
-| scikit-learn | `scoring_engine.py` | Calculates cosine similarity for semantic matching. |
-| OpenAI Whisper and PyTorch | Audio/video transcription | Converts speech from uploaded audio or extracted video audio into text. |
-| MoviePy | Standalone video pipeline | Extracts audio from video and creates demo media. |
-| Pillow, NumPy, imageio, imageio-ffmpeg | Video generation | Draws coaching frames, converts images, encodes MP4, and supplies FFmpeg. |
-| PowerShell System.Speech | Windows narration | Converts the generated coaching script into a WAV file locally. |
-| gTTS | Optional demo-video creation | Creates speech audio when the standalone demo video is generated. |
+- Text and audio submissions use the same scoring engine.
+- Audio submissions follow an audio → Whisper transcript → scoring workflow.
+- The rubric evaluates Content & Structure, Speech Rate, Language & Grammar, Clarity, and Engagement.
+- Content feedback identifies introduction sections and supporting evidence. Grammar feedback includes suggested corrections when available.
+- Feedback-video generation runs in a background worker; the API returns a job ID for browser polling.
+- Rubric and scoring implementations are shared in `shared_rubric.py` and `shared_scoring.py`.
 
 ## Architecture
 
 ```text
-Browser (index.html)
-        |
-        | JSON or multipart/form-data
-        v
-Flask API (app.py)
-        |
-        +--> RubricParser --> Case study for interns.xlsx
-        |
-        +--> ScoringEngine --> rule-based and optional NLP scoring
-        |
-        +--> Whisper --> transcript for uploaded audio
-        |
-        +--> video generation --> generated_outputs/*.mp4
+Browser UI (index.html)
+  ├── Text ── POST /api/score ───────────────────┐
+  └── Audio ─ POST /api/score-audio ─ Whisper ──┤
+                                                v
+                                      Transcript scoring
+                                      ├── rubric_parser.py
+                                      │     └── shared_rubric.py
+                                      └── scoring_engine.py
+                                            └── shared_scoring.py
+                                                │
+                                       Score and feedback
+                                                │
+                                      Background video worker
+                                                │
+                                       Generated MP4
+                                                │
+                                       Browser polling/player
 ```
 
-## Rubric
+`rubric_parser.py` and `scoring_engine.py` are compatibility import modules. The corresponding shared modules contain the implementations used by the Flask app.
 
-| Criterion | Weight |
-| --- | ---: |
-| Content and Structure | 40 |
-| Speech Rate | 10 |
-| Language and Grammar | 20 |
-| Clarity | 15 |
-| Engagement | 15 |
+## Scoring
 
-The overall score is the sum of normalized weighted criterion scores. When duration is provided, WPM is calculated as:
+| Category | Weight | Evaluation |
+| --- | ---: | --- |
+| Content & Structure | 40 | Greeting, name, education, skills, projects, experience, achievements, career goal, and closing |
+| Speech Rate | 10 | Words per minute when audio duration is available |
+| Language & Grammar | 20 | Grammar, sentence structure, vocabulary, repetition, sentence completeness, and writing mechanics |
+| Clarity | 15 | Configured filler-word rate |
+| Engagement | 15 | Positive/negative word-list heuristic |
 
-```text
-word_count / duration_seconds * 60
-```
+The overall score is out of 100. Content section points are normalized to the category weight; optional experience and achievement sections are handled separately from required/recommended sections. Language & Grammar can use local LanguageTool for suggestions, with built-in grammar checks as a fallback. Content section detection can use sentence-transformer similarity in addition to rules.
 
-Without duration, the Speech Rate metric cannot be calculated.
+Speech rate is calculated as `word_count / duration_seconds * 60`. The text endpoint does not accept duration, so it does not produce a WPM score. For audio submissions, the server attempts to detect duration from the uploaded file.
+
+These scores are practice feedback, not a formal assessment. Engagement and several other checks are lightweight heuristics.
+
+## Technology Stack
+
+| Technology | Use |
+| --- | --- |
+| Python | Application, transcription integration, and scoring |
+| Flask, Flask-CORS | Web server, API routes, and cross-origin support |
+| HTML, CSS, JavaScript | Browser interface; no frontend framework |
+| pandas, openpyxl | Read the workbook sample transcript |
+| OpenAI Whisper, PyTorch | Local audio transcription using the `base` model |
+| sentence-transformers, scikit-learn | Optional semantic section matching and cosine similarity |
+| language-tool-python, Java | Local grammar and writing suggestions |
+| NumPy, Pillow, imageio, imageio-ffmpeg | Render and encode generated feedback videos |
+| MoviePy | Optional fallback for detecting uploaded-audio duration |
+| PowerShell `System.Speech` | Optional Windows narration for generated videos |
+
+Dependencies are listed in [`requirements.txt`](./requirements.txt). The workbook `Case study for interns.xlsx` is required at startup because the rubric parser loads the sample transcript from it. No project-specific environment variables or API keys are required.
 
 ## Project Structure
 
 ```text
 .
-├── app.py                         Flask API and video generation
-├── index.html                     Browser UI
-├── rubric_parser.py               Excel rubric loader
-├── scoring_engine.py              Scoring algorithms
-├── Case study for interns.xlsx    Rubric source and sample transcript
-├── Sample text for case study.txt Plain-text sample transcript
-├── test_scoring.py                Scoring smoke test
-├── quick_test_upload.py           Audio upload API example
-├── requirements.txt               Main dependencies
-├── ARCHITECTURE.md                Architecture notes
-├── generated_outputs/             Runtime media and scripts
-└── Video_Scoring_Agent/           Standalone video pipeline
-    ├── main.py                    CLI entry point
-    └── agents.py                  Processing agents
+├── app.py                         # Flask API, Whisper audio flow, and feedback-video worker
+├── index.html                     # Text/audio UI, feedback display, video polling/player
+├── rubric_parser.py               # Compatibility import for shared rubric parser
+├── shared_rubric.py               # Rubric definitions and workbook sample loader
+├── scoring_engine.py              # Compatibility import for shared scoring engine
+├── shared_scoring.py              # Authoritative scoring implementation
+├── Case study for interns.xlsx    # Workbook containing the sample transcript
+├── requirements.txt               # Application dependencies
+├── tests/
+│   ├── test_regression.py         # API, audio, and feedback-video workflow tests
+│   └── test_scoring_enhancements.py
+├── README.md
+└── ARCHITECTURE.md
 ```
 
-Generated files such as `test_results.json`, `analysis_report.txt`, uploaded media, and model caches are runtime outputs.
+Generated audio, video, and other runtime files are written under `generated_outputs/`.
 
-## Requirements
+## Setup
 
-- Python 3.10 or newer. Python 3.11 is recommended.
-- Windows, macOS, or Linux.
-- Internet access on the first run if Whisper or the sentence-transformer model is not cached.
-- Enough memory and disk space for PyTorch and the Whisper `base` model.
-- Windows PowerShell for narrated video audio.
+Requirements:
 
-The root `requirements.txt` is the main dependency file. It includes the Flask, transcription, and video-generation dependencies required by the web application.
+- Python and the packages declared in `requirements.txt`
+- Internet access on first run to download model files if they are not cached
+- Java for LanguageTool's local grammar suggestions; built-in grammar checks remain available if LanguageTool cannot start
+- Windows PowerShell for optional generated-video narration
 
-## Installation
+Create a virtual environment and install dependencies from the project root.
 
-From the repository root on Windows:
+**Windows PowerShell**
 
 ```powershell
 python -m venv .venv
@@ -116,7 +111,7 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-On macOS or Linux:
+**macOS / Linux**
 
 ```bash
 python3 -m venv .venv
@@ -125,123 +120,83 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-If PowerShell blocks activation for the current session:
+## Run Locally
 
-```powershell
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
-```
-
-`imageio-ffmpeg` provides the FFmpeg binary used by the application. A system FFmpeg installation can still help when troubleshooting MoviePy.
-
-## Run the Web Application
-
-```powershell
+```bash
 python app.py
 ```
 
-Open <http://localhost:5000>. Flask serves the frontend and API from the same process.
+Open <http://localhost:5000>, enter a transcript or upload an audio recording, then review the score and feedback. The browser polls for the generated feedback video and displays it when ready.
 
-To use the interface:
+## API
 
-1. Paste a self-introduction into the transcript field.
-2. Enter the recording duration when available.
-3. Select **Score and generate video**.
-4. Review the overall score, detailed metrics, feedback, and generated video.
-
-For audio scoring, choose an audio file and select **Upload audio and score**. Whisper transcribes the file, the same scoring engine evaluates it, and the application generates the coaching artifact.
-
-The first audio request may take longer because Whisper loads its model. The sentence-transformer model is loaded only when semantic greeting matching is needed. If it cannot be loaded, rule-based scoring continues.
-
-## API Reference
-
-| Method | Endpoint | Description |
+| Method | Endpoint | Purpose |
 | --- | --- | --- |
-| GET | `/api/health` | Check API status. |
-| GET | `/api/rubrics` | Return the active rubric. |
-| GET | `/api/sample` | Return the sample transcript. |
-| POST | `/api/score` | Score a transcript supplied as JSON. |
-| POST | `/api/score-audio` | Transcribe and score an uploaded audio file. |
-| GET | `/generated-video` | Serve the latest generated MP4. |
+| GET | `/` | Serve the browser interface |
+| GET | `/index.html` | Serve the browser interface |
+| GET | `/api` | Return basic API information |
+| GET | `/api/health` | Health check |
+| GET | `/api/rubrics` | Return rubric data |
+| GET | `/api/sample` | Return the workbook sample transcript |
+| POST | `/api/score` | Score a text transcript |
+| POST | `/api/score-audio` | Transcribe and score an uploaded audio file |
+| GET | `/api/video-status/<job_id>` | Check feedback-video job status |
+| GET | `/generated-video` | Serve a generated MP4 |
 
-### Transcript request
+### Score text
 
-```json
-{
-  "transcript": "Hello everyone, my name is Alex. I enjoy reading. Thank you for listening.",
-  "duration_seconds": 20
-}
+```bash
+curl -X POST http://localhost:5000/api/score \
+  -H "Content-Type: application/json" \
+  -d "{\"transcript\":\"Hello. My name is Alex, and I study computer science.\"}"
 ```
 
-PowerShell example:
+The response includes the overall score, word count, category results, metadata, and feedback-video job information.
 
-```powershell
-$body = @{ transcript = "Hello everyone, my name is Alex. Thank you for listening."; duration_seconds = 20 } | ConvertTo-Json
-Invoke-RestMethod http://localhost:5000/api/score -Method Post -ContentType "application/json" -Body $body
+### Score audio
+
+Send `multipart/form-data` with an `audio` file field:
+
+```bash
+curl -X POST http://localhost:5000/api/score-audio \
+  -F "audio=@introduction.wav"
 ```
 
-### Audio request
+The server transcribes the recording with Whisper, scores the resulting transcript, and returns the transcript, detected duration when available, scoring results, and video-job information. Video files are rejected.
 
-Send a `multipart/form-data` request with:
+### Feedback-video status
 
-- `audio`: required audio file.
-- `duration_seconds`: optional numeric override.
+When the scoring response contains `generated_video.status: "processing"`, poll:
 
-If duration is not supplied, the server attempts to detect it from the media file or Whisper timestamps.
-
-## Run Tests
-
-Run the scoring smoke test from the repository root:
-
-```powershell
-python test_scoring.py
+```text
+GET /api/video-status/<job_id>
 ```
 
-The test loads the workbook sample, scores it for 52 seconds, prints each criterion, and writes `test_results.json`.
+On completion, the response contains the generated video's URL.
 
-With the server running, check the API:
+## Tests
 
-```powershell
-Invoke-RestMethod http://localhost:5000/api/health
-Invoke-RestMethod http://localhost:5000/api/sample
+Run the automated tests from the project root:
+
+```bash
+python -m pytest -q tests
 ```
 
-`quick_test_upload.py` is an example client for posting `Video_Scoring_Agent/sample_video.mp4` to `/api/score-audio`.
+## Screenshots and Demo
 
-## Standalone Video Pipeline
+Screenshots are not currently included. Add the browser interface and scoring-result screenshots here when available.
 
-```powershell
-cd Video_Scoring_Agent
-python main.py ..\Task_explanation_video.mp4
-```
+## Limitations and Future Improvements
 
-Or provide another video path:
+Current limitations:
 
-```powershell
-python main.py C:\path\to\your\video.mp4
-```
+- Scoring uses a mix of heuristics and locally loaded models; feedback should be treated as guidance.
+- Text submissions do not include speaking duration, so Speech Rate cannot be calculated for them.
+- Narration for generated feedback videos uses Windows PowerShell; video generation can fall back to a silent MP4.
+- Flask's development server is configured for local use and should be hardened before public deployment.
 
-The standalone pipeline:
+Possible future improvements (not implemented):
 
-1. Extracts audio with `VideoProcessorAgent`.
-2. Transcribes audio with `TranscriptionAgent` and Whisper.
-3. Scores the transcript with the shared rubric and scoring engine.
-4. Writes the result to `analysis_report.txt`.
-
-If no video path is supplied, the script attempts to create a sample video using gTTS and MoviePy.
-
-## Troubleshooting
-
-- **Workbook not found:** Run commands from the repository root. The parser expects `Case study for interns.xlsx` in the current working directory.
-- **Frontend says the backend is unavailable:** Start `python app.py` and open `http://localhost:5000`.
-- **Whisper fails to load:** Check internet access, disk space, and PyTorch installation.
-- **Narration fails:** Narration uses Windows PowerShell `System.Speech`; the generated video may still be returned without audio.
-- **FFmpeg or MoviePy errors:** Confirm that `imageio-ffmpeg` is installed. A system FFmpeg installation may also be required for the standalone pipeline.
-- **Port 5000 is busy:** Stop the other process or change the port at the bottom of `app.py`.
-
-## Limitations
-
-- Grammar and sentiment are lightweight heuristics rather than full grammar correction or general sentiment analysis.
-- Rubric loading depends on the workbook name and the `Rubrics` worksheet.
-- Generated files use fixed names, so a new score replaces the previous generated video.
-- `app.py` uses Flask debug mode and is intended for local development, not production deployment without hardening.
-
+- Support video uploads by extracting their audio, transcribing it with Whisper, and passing the transcript to the existing scoring engine.
+- Calibrate heuristic scoring against human-reviewed examples.
+- Add deployment configuration and production server support.

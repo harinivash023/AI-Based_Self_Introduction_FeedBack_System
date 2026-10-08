@@ -1,6 +1,4 @@
-"""
-Rubric Parser - Extracts rubrics and scoring criteria from Excel file
-"""
+"""Shared rubric definition and sample-transcript loader."""
 import pandas as pd
 import json
 import os
@@ -8,8 +6,7 @@ import os
 class RubricParser:
     def __init__(self, excel_file=None):
         self.excel_file = excel_file or os.path.join(
-            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-            'Case study for interns.xlsx'
+            os.path.dirname(os.path.abspath(__file__)), 'Case study for interns.xlsx'
         )
         self.rubrics = None
         self.sample_transcript = None
@@ -29,42 +26,15 @@ class RubricParser:
                     "name": "Content & Structure",
                     "weight": 40,
                     "metrics": [
-                        {
-                            "name": "Salutation Level",
-                            "max_score": 5,
-                            "weight": 5,
-                            "scoring": [
-                                {"level": "No Salutation", "keywords": [], "score": 0},
-                                {"level": "Normal", "keywords": ["Hi", "Hello"], "score": 2},
-                                {"level": "Good", "keywords": ["Good Morning", "Good Afternoon", "Good Evening", "Good Day", "Hello everyone"], "score": 4},
-                                {"level": "Excellent", "keywords": ["I am excited to introduce", "Feeling great", "excited", "pleasure", "delighted"], "score": 5}
-                            ]
-                        },
-                        {
-                            "name": "Keyword Presence",
-                            "max_score": 30,
-                            "weight": 30,
-                            "must_have": [
-                                {"keyword": "name", "keywords": ["name", "myself", "I am", "I'm"], "score": 4},
-                                {"keyword": "age", "keywords": ["year", "years old", "age"], "score": 4},
-                                {"keyword": "school/class", "keywords": ["school", "class", "grade", "studying"], "score": 4},
-                                {"keyword": "family", "keywords": ["family", "mother", "father", "brother", "sister", "parents"], "score": 4},
-                                {"keyword": "hobbies", "keywords": ["hobby", "hobbies", "like", "enjoy", "love", "play", "playing", "interest"], "score": 4}
-                            ],
-                            "good_to_have": [
-                                {"keyword": "about_family", "keywords": ["kind", "loving", "caring", "supportive"], "score": 2},
-                                {"keyword": "origin", "keywords": ["from", "belong", "native"], "score": 2},
-                                {"keyword": "ambition", "keywords": ["goal", "dream", "ambition", "want to be", "aspire"], "score": 2},
-                                {"keyword": "unique_fact", "keywords": ["fun fact", "interesting", "unique", "special"], "score": 2},
-                                {"keyword": "achievements", "keywords": ["achievement", "strength", "good at", "excel"], "score": 2}
-                            ]
-                        },
-                        {
-                            "name": "Flow",
-                            "max_score": 5,
-                            "weight": 5,
-                            "description": "Order: Salutation → Name → Mandatory details → Optional Details → Closing"
-                        }
+                        {"name": "Greeting", "max_score": 4, "weight": 4, "importance": "required"},
+                        {"name": "Name / Personal Introduction", "max_score": 5, "weight": 5, "importance": "required"},
+                        {"name": "Education", "max_score": 6, "weight": 6, "importance": "required"},
+                        {"name": "Technical Skills", "max_score": 5, "weight": 5, "importance": "recommended"},
+                        {"name": "Projects", "max_score": 4, "weight": 4, "importance": "recommended"},
+                        {"name": "Internship / Work Experience", "max_score": 3, "weight": 3, "importance": "optional"},
+                        {"name": "Achievements / Certifications", "max_score": 2, "weight": 2, "importance": "optional"},
+                        {"name": "Career Goal / Role Interest", "max_score": 3, "weight": 3, "importance": "recommended"},
+                        {"name": "Closing", "max_score": 3, "weight": 3, "importance": "recommended"},
                     ]
                 },
                 {
@@ -89,32 +59,12 @@ class RubricParser:
                     "name": "Language & Grammar",
                     "weight": 20,
                     "metrics": [
-                        {
-                            "name": "Grammar Score",
-                            "max_score": 10,
-                            "weight": 10,
-                            "description": "Grammar Score = 1 - min(errors per 100 words / 10, 1)",
-                            "scoring": [
-                                {"range": [0.9, 1.0], "score": 10},
-                                {"range": [0.7, 0.89], "score": 8},
-                                {"range": [0.5, 0.69], "score": 6},
-                                {"range": [0.3, 0.49], "score": 4},
-                                {"range": [0, 0.29], "score": 2}
-                            ]
-                        },
-                        {
-                            "name": "Vocabulary Richness",
-                            "max_score": 10,
-                            "weight": 10,
-                            "description": "TTR = Distinct words / Total words",
-                            "scoring": [
-                                {"range": [0.9, 1.0], "score": 10},
-                                {"range": [0.7, 0.89], "score": 8},
-                                {"range": [0.5, 0.69], "score": 6},
-                                {"range": [0.3, 0.49], "score": 4},
-                                {"range": [0, 0.29], "score": 2}
-                            ]
-                        }
+                        {"name": "Grammar Score", "max_score": 8, "weight": 8},
+                        {"name": "Sentence Structure", "max_score": 3, "weight": 3},
+                        {"name": "Vocabulary Richness", "max_score": 3, "weight": 3},
+                        {"name": "Repetition", "max_score": 2, "weight": 2},
+                        {"name": "Sentence Completeness", "max_score": 2, "weight": 2},
+                        {"name": "Writing Mechanics", "max_score": 2, "weight": 2},
                     ]
                 },
                 {

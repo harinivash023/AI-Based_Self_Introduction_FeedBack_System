@@ -1343,6 +1343,24 @@
             const audioInput = Boolean(data.transcript_extracted);
 
             if (name === "content and structure") {
+                const detail = criterion.content_structure;
+                if (detail) {
+                    const sections = Object.values(detail.sections || {});
+                    const sectionDetails = sections.map(section =>
+                        `${section.name}: ${section.detected ? "detected" : "not detected"} (${section.score}/${section.max_score})`
+                    );
+                    return {
+                        strengths: (detail.feedback && detail.feedback.strengths) || [],
+                        improvements: (detail.feedback && detail.feedback.improvements) || [],
+                        details: sectionDetails,
+                        recommendation: detail.candidate_profile === "experienced"
+                            ? "Keep the introduction concise and connect your experience to the role."
+                            : "Prioritize your education, relevant skills, projects, and career direction.",
+                        summary: (detail.feedback && detail.feedback.summary) ||
+                            `Content and structure score: ${detail.score}/${detail.max_score}.`,
+                        notAssessed: false
+                    };
+                }
                 const keywordMetric = findMetric(criterion, "Keyword Presence");
                 const keywordLabels = {
                     name: "your name",
@@ -1427,6 +1445,24 @@
             }
 
             if (name === "language and grammar") {
+                const detail = criterion.language_grammar;
+                if (detail) {
+                    const issues = (detail.issues || []).map(issue =>
+                        `"${issue.original}" → "${issue.suggestion}" (${issue.type}): ${issue.explanation}`
+                    );
+                    return {
+                        strengths: detail.strengths || [],
+                        improvements: detail.improvements || [],
+                        details: issues,
+                        issues,
+                        recommendation: issues.length
+                            ? "Review the suggested corrections and read the updated sentences aloud."
+                            : "Keep using clear sentences and check grammar and mechanics before submitting.",
+                        summary: (detail.feedback && detail.feedback.summary) ||
+                            `Language and grammar score: ${detail.score}/${detail.max_score}.`,
+                        notAssessed: false
+                    };
+                }
                 const grammar = findMetric(criterion, "Grammar Score");
                 const vocabulary = findMetric(criterion, "Vocabulary Richness");
                 const strengths = [];
@@ -1550,8 +1586,11 @@
                 const weightedScore = Number(criterion.weighted_score || 0);
                 const isUnassessedRate = normalizeCriterionName(criterion.criterion) === "speech rate" && coaching.notAssessed;
                 const percent = weight ? Math.max(0, Math.min(100, weightedScore / weight * 100)) : 0;
-                const formattedScore = Number.isInteger(weightedScore) ? weightedScore : weightedScore.toFixed(1);
-                const scoreText = isUnassessedRate ? `Not assessed / ${weight}` : `${formattedScore} / ${weight}`;
+                const contentDetail = criterion.content_structure;
+                const displayScore = contentDetail ? Number(contentDetail.score) : weightedScore;
+                const displayMax = contentDetail ? Number(contentDetail.max_score) : weight;
+                const formattedScore = Number.isInteger(displayScore) ? displayScore : displayScore.toFixed(1);
+                const scoreText = isUnassessedRate ? `Not assessed / ${weight}` : `${formattedScore} / ${displayMax}`;
                 return `
                     <article class="coaching-category">
                         <div class="coaching-category-head">
@@ -1562,6 +1601,7 @@
                         <div class="coaching-insights">
                             <div class="coaching-insight"><strong>Strengths</strong>${renderFeedbackList(coaching.strengths, "No distinct strengths were identified by these rubric measures.")}</div>
                             <div class="coaching-insight"><strong>Areas for Improvement</strong>${renderFeedbackList(coaching.improvements, "No priority improvements were identified by these rubric measures.")}</div>
+                            ${coaching.details && coaching.details.length ? `<div class="coaching-insight"><strong>${coaching.issues ? "Grammar Corrections" : "Section Feedback"}</strong>${renderFeedbackList(coaching.details, "No additional details.")}</div>` : ""}
                             <div class="coaching-insight"><strong>Recommended Action</strong><p>${escapeHtml(coaching.recommendation)}</p></div>
                         </div>
                     </article>

@@ -60,6 +60,18 @@ def test_text_api_does_not_use_a_supplied_speaking_duration(monkeypatch):
     assert response.status_code == 200
     body = response.get_json()
     assert body["word_count"] == 6
+    assert 0 <= body["overall_score"] <= 100
+    assert {
+        criterion["criterion"] for criterion in body["criteria_scores"]
+    } == {
+        "Content & Structure",
+        "Speech Rate",
+        "Language & Grammar",
+        "Clarity",
+        "Engagement",
+    }
+    assert body["generated_video"]["status"] == "processing"
+    assert body["generated_video"]["job_id"]
     assert body["metadata"]["duration_seconds"] is None
     assert body["metadata"]["wpm"] is None
 
@@ -151,6 +163,26 @@ def test_audio_route_transcribes_scores_and_queues_video(monkeypatch):
         if criterion["criterion"] == "Speech Rate"
     )
     assert speech_rate["metrics"][0]["wpm"] == round(body["metadata"]["wpm"], 2)
+
+
+@pytest.mark.parametrize(
+    ("filename", "mimetype"),
+    [
+        ("practice.mp4", "application/octet-stream"),
+        ("practice.wav", "video/mp4"),
+    ],
+)
+def test_audio_route_rejects_video_uploads(filename, mimetype):
+    response = app.test_client().post(
+        "/api/score-audio",
+        data={"audio": (BytesIO(b"video placeholder"), filename, mimetype)},
+        content_type="multipart/form-data",
+    )
+
+    assert response.status_code == 400
+    assert response.get_json()["error"] == (
+        "Video uploads are not supported. Please upload an audio file."
+    )
 
 
 def test_audio_duration_failure_does_not_use_whisper_segment_estimate(monkeypatch):
